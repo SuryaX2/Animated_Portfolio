@@ -8,12 +8,11 @@ function Hero() {
   const heroRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
+  const descriptionRef = useRef(null);
   const ctaRef = useRef(null);
   const svgRef = useRef(null);
   const gridRef = useRef(null);
   const floatingRef = useRef(null);
-  const scrollSvgRef = useRef(null);
-  const morphPathRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -46,6 +45,12 @@ function Hero() {
           "-=0.6"
         )
         .fromTo(
+          descriptionRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power4.out" },
+          "-=0.4"
+        )
+        .fromTo(
           ctaRef.current.children,
           { opacity: 0, scale: 0.95, y: 40 },
           {
@@ -71,6 +76,15 @@ function Hero() {
         { opacity: 0.03, duration: 2, delay: 0.5 }
       );
 
+      gsap.to(floatingRef.current.children, {
+        y: -20,
+        duration: 2,
+        stagger: 0.2,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut",
+      });
+
       gsap.to(svgRef.current, {
         rotate: 360,
         duration: 40,
@@ -88,45 +102,6 @@ function Hero() {
           scrub: 1.5,
         },
       });
-
-      // Scroll-synced animated SVG
-      gsap.to(scrollSvgRef.current, {
-        rotation: 180,
-        scale: 1.5,
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 2,
-        },
-      });
-
-      // Morph path animation
-      const paths = [
-        "M300,100 Q400,200 300,300 Q200,400 300,500 Q400,400 300,300 Q200,200 300,100 Z",
-        "M300,150 Q450,250 350,400 Q250,450 150,350 Q100,200 300,150 Z",
-        "M250,150 Q400,150 400,300 Q400,450 250,450 Q100,450 100,300 Q100,150 250,150 Z",
-      ];
-
-      gsap.to(morphPathRef.current, {
-        attr: { d: paths[1] },
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "30% top",
-          scrub: 1,
-        },
-      });
-
-      gsap.to(morphPathRef.current, {
-        attr: { d: paths[2] },
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "30% top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
     }, heroRef);
 
     return () => ctx.revert();
@@ -138,7 +113,7 @@ function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-black via-gray-900 to-black px-6 text-center md:px-12 lg:px-24"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 md:px-12 lg:px-24 bg-linear-to-b from-black via-gray-900 to-black text-center"
     >
       <div
         ref={gridRef}
@@ -201,71 +176,6 @@ function Hero() {
         className="pointer-events-none absolute inset-0"
       ></div>
 
-      {/* Scroll-synced animated SVG */}
-      <div
-        ref={scrollSvgRef}
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-      >
-        <svg
-          width="600"
-          height="600"
-          viewBox="0 0 600 600"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="opacity-20"
-        >
-          {/* Morphing blob */}
-          <path
-            ref={morphPathRef}
-            d="M300,100 Q400,200 300,300 Q200,400 300,500 Q400,400 300,300 Q200,200 300,100 Z"
-            fill="url(#blobGradient)"
-            stroke="url(#blobStroke)"
-            strokeWidth="2"
-          />
-
-          {/* Animated particles */}
-          <circle cx="300" cy="150" r="4" fill="#ffffff" opacity="0.6">
-            <animateMotion
-              dur="10s"
-              repeatCount="indefinite"
-              path="M0,0 Q100,100 0,200 Q-100,100 0,0 Z"
-            />
-          </circle>
-          <circle cx="350" cy="200" r="3" fill="#ffffff" opacity="0.5">
-            <animateMotion
-              dur="12s"
-              repeatCount="indefinite"
-              path="M0,0 Q-150,50 -50,150 Q50,50 0,0 Z"
-            />
-          </circle>
-          <circle cx="250" cy="250" r="5" fill="#ffffff" opacity="0.4">
-            <animateMotion
-              dur="15s"
-              repeatCount="indefinite"
-              path="M0,0 Q80,-120 160,0 Q80,120 0,0 Z"
-            />
-          </circle>
-
-          <defs>
-            <linearGradient
-              id="blobGradient"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
-              <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#ec4899" stopOpacity="0.1" />
-            </linearGradient>
-            <linearGradient id="blobStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.2" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-
       <div className="relative z-10 max-w-6xl text-center">
         <h1
           ref={titleRef}
@@ -288,7 +198,7 @@ function Hero() {
           className="mb-8 text-2xl font-semibold text-gray-300 md:text-4xl lg:text-5xl"
         >
           {subtitle.split(" ").map((word, index) => (
-            <span key={index} className="word inline-block">
+            <span key={index} className="word mr-3 inline-block">
               {word}
             </span>
           ))}
