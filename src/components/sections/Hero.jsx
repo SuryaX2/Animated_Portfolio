@@ -1,30 +1,32 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import React, { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 
 const Hero = () => {
   const componentRef = useRef(null);
+  const introRef = useRef(null);
+  const titlesRef = useRef([]);
+  const heroRef = useRef(null);
 
   useGSAP(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
-      tl.from("#intro", {
+      tl.from(introRef.current, {
         xPercent: -100,
         duration: 1,
         delay: 0.3,
         borderRadius: "10vh",
         ease: "circ.in",
       })
-        .from(["#title1", "#title2", "#title3", "#title4"], {
+        .from(titlesRef.current, {
           xPercent: -100,
           opacity: 0,
           stagger: 0.2,
           duration: 1,
-          
           ease: "power4.out",
         })
-        .to(["#title1", "#title2", "#title3", "#title4"], {
+        .to(titlesRef.current, {
           xPercent: 100,
           opacity: 0,
           stagger: 0.2,
@@ -32,7 +34,7 @@ const Hero = () => {
           ease: "power4.out",
         })
         .to(
-          "#intro",
+          introRef.current,
           {
             xPercent: 100,
             duration: 1,
@@ -42,7 +44,7 @@ const Hero = () => {
           },
           "-=1",
         )
-        .from("#hero", {
+        .from(heroRef.current, {
           xPercent: -100,
           opacity: 0,
           duration: 0.5,
@@ -55,16 +57,21 @@ const Hero = () => {
   return (
     <div className="relative" ref={componentRef}>
       <div
+        ref={introRef}
         className="min-h-screen flex items-start justify-center bg-gray-100 text-black text-8xl flex-col gap-8 pt-40 font-medium tracking-tight absolute top-0 left-0 w-full z-10"
-        id="intro"
       >
-        <h1 id="title1">Hello, I&apos;m Surya Sekhar Sharma</h1>
-        <h1 id="title2">A Software Developer</h1>
-        <h1 id="title3">A Web Designer</h1>
-        <h1 id="title4">And a Tech Enthusiast</h1>
+        <h1 ref={(el) => (titlesRef.current[0] = el)}>
+          Hello, I&apos;m Surya Sekhar Sharma
+        </h1>
+        <h1 ref={(el) => (titlesRef.current[1] = el)}>A Software Developer</h1>
+        <h1 ref={(el) => (titlesRef.current[2] = el)}>A Web Designer</h1>
+        <h1 ref={(el) => (titlesRef.current[3] = el)}>And a Tech Enthusiast</h1>
       </div>
 
-      <div className="min-h-screen flex items-center justify-center" id="hero">
+      <div
+        ref={heroRef}
+        className="min-h-screen flex items-center justify-center"
+      >
         <h1 className="text-4xl font-extrabold">Hero Section</h1>
       </div>
     </div>
