@@ -13,6 +13,7 @@ const Hero = () => {
         xPercent: -100,
         duration: 1,
         delay: 0.3,
+        borderRadius: "10vh",
         ease: "circ.in",
       })
         .from(["#title1", "#title2", "#title3", "#title4"], {
@@ -29,12 +30,17 @@ const Hero = () => {
           duration: 1,
           ease: "power4.out",
         })
-        .to("#intro", {
-          xPercent: 100,
-          duration: 1,
-          delay: 0.3,
-          ease: "circ.out",
-        })
+        .to(
+          "#intro",
+          {
+            xPercent: 100,
+            duration: 1,
+            delay: 0.3,
+            borderRadius: "10vh",
+            ease: "circ.out",
+          },
+          "-=1",
+        )
         .from("#hero", {
           xPercent: -100,
           opacity: 0,
