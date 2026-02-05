@@ -21,6 +21,7 @@ const Hero = () => {
           opacity: 0,
           stagger: 0.2,
           duration: 1,
+          
           ease: "power4.out",
         })
         .to(["#title1", "#title2", "#title3", "#title4"], {
