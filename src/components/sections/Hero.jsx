@@ -58,10 +58,10 @@ const Hero = () => {
     <div className="relative" ref={componentRef}>
       <div
         ref={introRef}
-        className="min-h-screen flex items-start justify-center bg-gray-100 text-black text-8xl flex-col gap-8 pt-40 font-medium tracking-tight absolute top-0 left-0 w-full z-10"
+        className="min-h-screen flex items-start justify-center bg-gray-100 text-black text-8xl flex-col gap-8 font-medium tracking-tighter absolute top-0 left-0 w-full z-10 uppercase"
       >
         <h1 ref={(el) => (titlesRef.current[0] = el)}>
-          Hello, I&apos;m Surya Sekhar Sharma
+          Hi, I&apos;m Surya Sekhar Sharma
         </h1>
         <h1 ref={(el) => (titlesRef.current[1] = el)}>A Software Developer</h1>
         <h1 ref={(el) => (titlesRef.current[2] = el)}>A Web Designer</h1>
