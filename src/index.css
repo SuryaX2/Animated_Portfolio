@@ -4,6 +4,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   scroll-behavior: smooth;
 }
 
@@ -12,4 +13,13 @@ body {
   background-color: black;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::selection {
+  background-color: #ffffff;
+  color: black;
 }

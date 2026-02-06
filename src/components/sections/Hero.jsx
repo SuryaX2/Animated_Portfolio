@@ -1,4 +1,3 @@
-// Hero.jsx
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useEffect, useState } from "react";
@@ -50,7 +49,7 @@ const Hero = () => {
         .to(
           {},
           {
-            duration: 2,
+            duration: 2.5,
             onUpdate: function () {
               const progress = Math.round(this.progress() * 100);
               setLoadingProgress(progress);
@@ -97,11 +96,21 @@ const Hero = () => {
         progressBarRef={progressBarRef}
       />
 
-      <div
-        ref={heroRef}
-        className="min-h-screen flex items-center justify-center"
-      >
-        <h1 className="text-4xl font-extrabold">Hero Section</h1>
+      <div ref={heroRef} className="min-h-screen relative">
+        <img
+          src="/bgimg.jpg"
+          alt="background image"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-90"
+        />
+
+        <div className="p-16 relative z-10 flex flex-col gap-4 sm:gap-6 md:gap-8">
+          <h1 className="text-9xl font-medium uppercase tracking-wider">
+            Creative
+          </h1>
+          <h1 className="text-9xl font-medium uppercase text-right tracking-wider">
+            Developer
+          </h1>
+        </div>
       </div>
     </div>
   );
