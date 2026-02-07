@@ -2,12 +2,14 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useEffect, useState } from "react";
 import IntroSlide from "./IntroSlide";
+import { SplitText } from "gsap/SplitText";
 
 const Hero = () => {
   const componentRef = useRef(null);
   const introRef = useRef(null);
   const titlesRef = useRef([]);
   const heroRef = useRef(null);
+  const bgImgRef = useRef(null);
   const progressBarRef = useRef(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
@@ -23,20 +25,21 @@ const Hero = () => {
         },
       });
 
-      tl.from(introRef.current, {
-        xPercent: -100,
-        duration: 1,
-        delay: 0.3,
-        borderRadius: "10vh",
-        ease: "circ.in",
+      let split = SplitText.create(".split", {
+        type: "chars",
+      });
+
+      let splitReverse = SplitText.create(".split-reverse", {
+        type: "chars",
+      });
+
+      tl.from(titlesRef.current, {
+        yPercent: 100,
+        opacity: 0,
+        stagger: 0.5,
+        duration: 1.5,
+        ease: "power4.out",
       })
-        .from(titlesRef.current, {
-          xPercent: -100,
-          opacity: 0,
-          stagger: 0.2,
-          duration: 1,
-          ease: "power4.out",
-        })
         .from(
           progressBarRef.current,
           {
@@ -57,7 +60,7 @@ const Hero = () => {
           },
         )
         .to([titlesRef.current, progressBarRef.current], {
-          xPercent: 100,
+          yPercent: -100,
           opacity: 0,
           stagger: 0.2,
           duration: 1,
@@ -66,20 +69,33 @@ const Hero = () => {
         .to(
           introRef.current,
           {
-            xPercent: 100,
-            duration: 1,
+            yPercent: -100,
+            duration: 1.5,
             delay: 0.3,
-            borderRadius: "10vh",
+            borderRadius: "100%",
             ease: "circ.out",
           },
           "-=1",
         )
-        .from(heroRef.current, {
-          xPercent: -100,
+        .from(bgImgRef.current, {
           opacity: 0,
-          duration: 0.5,
+          duration: 1,
           ease: "power4.out",
-        });
+        })
+        .from(split.chars, {
+          duration: 1,
+          y: -300,
+          autoAlpha: 0,
+          stagger: 0.05,
+          ease: "power4.out",
+        })
+        .from(splitReverse.chars, {
+          duration: 1,
+          y: 300,
+          autoAlpha: 0,
+          stagger: -0.05,
+          ease: "power4.out",
+        }, "<");
     }, componentRef);
     return () => {
       ctx.revert();
@@ -96,18 +112,23 @@ const Hero = () => {
         progressBarRef={progressBarRef}
       />
 
-      <div ref={heroRef} className="min-h-screen relative">
+      <div className="min-h-screen relative">
         <img
           src="/bgimg.jpg"
           alt="background image"
+          loading="lazy"
+          ref={bgImgRef}
           className="absolute inset-0 w-full h-full object-cover object-center opacity-90"
         />
 
-        <div className="p-16 relative z-10 flex flex-col gap-4 sm:gap-6 md:gap-8">
-          <h1 className="text-9xl font-medium uppercase tracking-wider">
+        <div
+          ref={heroRef}
+          className="p-16 relative z-10 flex flex-col gap-4 sm:gap-6 md:gap-8"
+        >
+          <h1 className="text-9xl font-medium uppercase tracking-wider split">
             Creative
           </h1>
-          <h1 className="text-9xl font-medium uppercase text-right tracking-wider">
+          <h1 className="text-9xl font-medium uppercase text-right tracking-wider split-reverse">
             Developer
           </h1>
         </div>
