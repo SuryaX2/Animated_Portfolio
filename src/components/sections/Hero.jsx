@@ -70,7 +70,7 @@ const Hero = () => {
           introRef.current,
           {
             yPercent: -100,
-            duration: 1.5,
+            duration: 1,
             delay: 0.3,
             borderRadius: "100%",
             ease: "circ.out",
@@ -80,22 +80,30 @@ const Hero = () => {
         .from(bgImgRef.current, {
           opacity: 0,
           duration: 1,
+          scale: 1.2,
+          filter: "blur(10px)",
           ease: "power4.out",
         })
         .from(split.chars, {
           duration: 1,
           y: -300,
           autoAlpha: 0,
+          filter: "blur(10px)",
           stagger: 0.05,
           ease: "power4.out",
         })
-        .from(splitReverse.chars, {
-          duration: 1,
-          y: 300,
-          autoAlpha: 0,
-          stagger: -0.05,
-          ease: "power4.out",
-        }, "<");
+        .from(
+          splitReverse.chars,
+          {
+            duration: 1,
+            y: 300,
+            autoAlpha: 0,
+            filter: "blur(10px)",
+            stagger: -0.05,
+            ease: "power4.out",
+          },
+          "<",
+        );
     }, componentRef);
     return () => {
       ctx.revert();
@@ -125,10 +133,10 @@ const Hero = () => {
           ref={heroRef}
           className="p-16 relative z-10 flex flex-col gap-4 sm:gap-6 md:gap-8"
         >
-          <h1 className="text-9xl font-medium uppercase tracking-wider split">
+          <h1 className="text-9xl font-extrabold uppercase tracking-wider split">
             Creative
           </h1>
-          <h1 className="text-9xl font-medium uppercase text-right tracking-wider split-reverse">
+          <h1 className="text-9xl font-extrabold uppercase text-right tracking-wider split-reverse">
             Developer
           </h1>
         </div>
