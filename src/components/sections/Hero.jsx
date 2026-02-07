@@ -129,14 +129,11 @@ const Hero = () => {
           className="absolute inset-0 w-full h-full object-cover object-center opacity-90"
         />
 
-        <div
-          ref={heroRef}
-          className="p-16 relative z-10 flex flex-col gap-4 sm:gap-6 md:gap-8"
-        >
+        <div ref={heroRef} className="p-16 relative z-10 flex flex-col gap-4">
           <h1 className="text-9xl font-extrabold uppercase tracking-wider split">
             Creative
           </h1>
-          <h1 className="text-9xl font-extrabold uppercase text-right tracking-wider split-reverse">
+          <h1 className="text-9xl font-extrabold uppercase text-right tracking-wider split-reverse ">
             Developer
           </h1>
         </div>
