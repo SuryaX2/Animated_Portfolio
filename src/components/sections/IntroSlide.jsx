@@ -7,7 +7,7 @@ const IntroSlide = ({
   return (
     <div
       ref={introRef}
-      className="min-h-screen flex items-start justify-center bg-gray-100 text-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl flex-col gap-4 sm:gap-6 md:gap-8 font-medium tracking-tighter absolute top-0 left-0 w-full z-10 uppercase px-8 md:px-16 lg:px-24 pt-32 md:pt-40 overflow-hidden"
+      className="min-h-screen flex items-start justify-center bg-gray-100 text-black text-6xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl flex-col gap-4 sm:gap-6 md:gap-8 font-bold tracking-tighter absolute top-0 left-0 w-full z-10 uppercase overflow-hidden"
     >
       <h1 ref={(el) => (titlesRef.current[0] = el)}>
         Hi, I&apos;m Surya Sekhar Sharma
@@ -20,7 +20,7 @@ const IntroSlide = ({
         ref={progressBarRef}
         className="fixed bottom-0 right-0 flex items-center"
       >
-        <span className="px-8 md:px-16 text-5xl md:text-7xl lg:text-9xl font-bold whitespace-nowrap">
+        <span className="text-9xl md:text-7xl lg:text-9xl font-bold whitespace-nowrap">
           {loadingProgress}%
         </span>
       </div>

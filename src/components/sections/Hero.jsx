@@ -80,8 +80,8 @@ const Hero = () => {
         .from(bgImgRef.current, {
           opacity: 0,
           duration: 1,
-          scale: 1.2,
-          filter: "blur(10px)",
+          scale: 3,
+          filter: "blur(20px)",
           ease: "power4.out",
         })
         .from(split.chars, {
@@ -133,7 +133,7 @@ const Hero = () => {
           <h1 className="text-9xl font-extrabold uppercase tracking-wider split">
             Creative
           </h1>
-          <h1 className="text-9xl font-extrabold uppercase text-right tracking-wider split-reverse ">
+          <h1 className="text-9xl font-extrabold uppercase text-right tracking-wider split-reverse">
             Developer
           </h1>
         </div>
