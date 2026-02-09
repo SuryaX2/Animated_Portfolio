@@ -11,7 +11,7 @@ const CustomCursor = () => {
         x: e.x,
         y: e.y,
         ease: "power3.out",
-        duration: 1,
+        duration: 0.3,
       });
     };
 
