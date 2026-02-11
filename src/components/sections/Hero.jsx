@@ -17,97 +17,99 @@ const Hero = () => {
     document.body.style.overflow = "hidden";
   }, []);
 
-  useGSAP(
-    () => {
-      const split = new SplitText(".split", { type: "chars" });
-      const splitReverse = new SplitText(".split-reverse", { type: "chars" });
-
-      const loader = { value: 0 };
-
+  useGSAP(() => {
+    const ctx = gsap.context(() => {
       const tl = gsap.timeline({
-        defaults: { ease: "power4.out" },
         onComplete: () => {
           document.body.style.overflow = "auto";
         },
       });
 
+      let split = SplitText.create(".split", {
+        type: "chars",
+      });
+
+      let splitReverse = SplitText.create(".split-reverse", {
+        type: "chars",
+      });
+
       tl.from(titlesRef.current, {
         yPercent: 100,
         opacity: 0,
-        stagger: 0.25,
-        duration: 0.9,
+        stagger: 0.5,
+        duration: 1.5,
+        ease: "power4.out",
       })
-
         .from(
           progressBarRef.current,
           {
             opacity: 0,
-            duration: 0.4,
+            duration: 0.5,
+            ease: "power4.out",
           },
           "<",
         )
-
-        .to(loader, {
-          value: 100,
-          duration: 1.4,
-          ease: "none",
-          onUpdate: () => setLoadingProgress(Math.round(loader.value)),
-        })
-
+        .to(
+          {},
+          {
+            duration: 2.5,
+            onUpdate: function () {
+              const progress = Math.round(this.progress() * 100);
+              setLoadingProgress(progress);
+            },
+          },
+        )
         .to([titlesRef.current, progressBarRef.current], {
           yPercent: -100,
           opacity: 0,
-          stagger: 0.15,
-          duration: 0.8,
+          stagger: 0.2,
+          duration: 1,
+          ease: "power4.out",
         })
-
         .to(
           introRef.current,
           {
             yPercent: -100,
-            duration: 0.9,
+            duration: 1,
+            delay: 0.3,
+            borderRadius: "100%",
             ease: "circ.out",
           },
-          "-=0.6",
+          "-=1",
         )
-
-        .from(
-          bgImgRef.current,
-          {
-            yPercent: 100,
-            filter: "blur(20px)",
-            duration: 0.8,
-            ease: "circ.out",
-          },
-          "<",
-        )
-
-        .from(split.chars, {
-          y: -220,
-          autoAlpha: 0,
-          stagger: 0.04,
-          duration: 0.8,
+        .from(bgImgRef.current, {
+          opacity: 0,
+          duration: 1,
+          scale: 3,
+          filter: "blur(20px)",
+          ease: "power4.out",
         })
-
+        .from(split.chars, {
+          duration: 1,
+          y: -300,
+          autoAlpha: 0,
+          filter: "blur(10px)",
+          stagger: 0.05,
+          ease: "power4.out",
+        })
         .from(
           splitReverse.chars,
           {
-            y: 220,
+            duration: 1,
+            y: 300,
             autoAlpha: 0,
-            stagger: -0.04,
-            duration: 0.8,
+            filter: "blur(10px)",
+            stagger: -0.05,
+            ease: "power4.out",
           },
           "<",
         );
-
-      return () => {
-        split.revert();
-        splitReverse.revert();
-        document.body.style.overflow = "auto";
-      };
-    },
-    { scope: componentRef },
-  );
+    }, componentRef);
+    return () => {
+      ctx.revert();
+      document.body.style.overflow = "auto";
+    };
+  });
 
   return (
     <div className="relative overflow-x-hidden" ref={componentRef}>
