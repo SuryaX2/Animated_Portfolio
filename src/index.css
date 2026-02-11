@@ -17,3 +17,20 @@ body {
   color: black;
 }
 
+.custom-cursor {
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translate3d(0, 0, 0);
+}
+
+.split,
+.split-reverse {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-text {
+  opacity: 0;
+  visibility: hidden;
+}
