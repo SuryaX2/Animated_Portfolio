@@ -24,7 +24,12 @@ const Hero = () => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
+    const timer = setTimeout(() => {
+      document.body.style.overflow = originalOverflow;
+    }, 6000);
+
     return () => {
+      clearTimeout(timer);
       document.body.style.overflow = originalOverflow;
     };
   }, []);
@@ -180,7 +185,7 @@ const Hero = () => {
   );
 
   return (
-    <div className="relative overflow-x-hidden" ref={componentRef}>
+    <div id="hero" className="relative overflow-x-hidden" ref={componentRef}>
       <IntroSlide
         introRef={introRef}
         titlesRef={titlesRef}
