@@ -58,7 +58,7 @@ const CONTACT_INFO = {
 const ANIMATION_CONFIG = {
   overlayDuration: 1,
   contentFadeDuration: 0.8,
-  imageDuration: 0.5,
+  imageDuration: 1,
   linkStagger: 0.1,
   tagStagger: 0.06,
   footerStagger: 0.06,
@@ -143,7 +143,11 @@ const Navbar = () => {
       });
 
       gsap.set(menuContentRef.current, { opacity: 0 });
-      gsap.set(menuImageRef.current, { scale: 1.3, opacity: 0 });
+      gsap.set(menuImageRef.current, {
+        scale: 1.3,
+        opacity: 0,
+        clipPath: "inset(0 0 100% 0)",
+      });
 
       // Create main animation timeline
       timelineRef.current = gsap
@@ -169,7 +173,7 @@ const Navbar = () => {
           menuImageRef.current,
           {
             scale: 1,
-            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            clipPath: "inset(0 0 0% 0)",
             opacity: 0.85,
             duration: ANIMATION_CONFIG.imageDuration,
             ease: ANIMATION_CONFIG.easeType,
