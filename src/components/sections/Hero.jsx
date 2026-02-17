@@ -1,44 +1,141 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useRef, useEffect, useState, useCallback } from "react";
 import IntroSlide from "./IntroSlide";
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(SplitText, ScrollTrigger);
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const FRAME_COUNT = 300;
+const SCROLL_DISTANCE = "300%";
+const FRAME_PATH = (n) => `/Frames/frame_${String(n).padStart(4, "0")}.jpeg`;
+
+// ─── Frame preloader ──────────────────────────────────────────────────────────
+
+const preloadFrames = () => {
+  const images = new Array(FRAME_COUNT);
+
+  const promises = Array.from({ length: FRAME_COUNT }, (_, i) => {
+    const img = new Image();
+    img.src = FRAME_PATH(i + 1);
+    images[i] = img;
+    return new Promise((resolve) => {
+      img.onload = resolve;
+      img.onerror = resolve; // never block on a missing frame
+    });
+  });
+
+  return Promise.all(promises).then(() => images);
+};
+
+// ─── drawImageCover ───────────────────────────────────────────────────────────
+
+/**
+ * Replicates CSS `object-fit: cover; object-position: center` for a <canvas>.
+ * Crops from the centre so the image always fills the canvas without distortion.
+ */
+const drawImageCover = (ctx, img, canvasW, canvasH) => {
+  const imgRatio = img.naturalWidth / img.naturalHeight;
+  const canvasRatio = canvasW / canvasH;
+
+  let srcX, srcY, srcW, srcH;
+
+  if (imgRatio > canvasRatio) {
+    // Image is wider — crop the left and right sides
+    srcH = img.naturalHeight;
+    srcW = srcH * canvasRatio;
+    srcX = (img.naturalWidth - srcW) / 2;
+    srcY = 0;
+  } else {
+    // Image is taller — crop the top and bottom
+    srcW = img.naturalWidth;
+    srcH = srcW / canvasRatio;
+    srcX = 0;
+    srcY = (img.naturalHeight - srcH) / 2;
+  }
+
+  ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, canvasW, canvasH);
+};
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 const Hero = () => {
   const componentRef = useRef(null);
   const introRef = useRef(null);
   const titlesRef = useRef([]);
   const heroRef = useRef(null);
-  const bgImgRef = useRef(null);
+  const canvasRef = useRef(null);
   const progressBarRef = useRef(null);
 
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [framesLoaded, setFramesLoaded] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
+  const framesRef = useRef([]); // raw Image objects
+  const currentFrameRef = useRef(0); // tracks last-drawn frame index
   const splitInstancesRef = useRef([]);
 
+  // ── Preload all frames once on mount ───────────────────────────────────────
+
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
+    preloadFrames().then((images) => {
+      framesRef.current = images;
+      setFramesLoaded(true);
+    });
+  }, []);
+
+  // ── Scroll lock ────────────────────────────────────────────────────────────
+  //
+  // Lock scroll immediately on mount. We expose `unlockScrollRef` so that
+  // the GSAP timeline can call it synchronously inside `onComplete` — no
+  // setTimeout, no race conditions, no undefined variable.
+
+  const unlockScrollRef = useRef(null);
+
+  useEffect(() => {
     document.body.style.overflow = "hidden";
 
-    const timer = setTimeout(() => {
-      document.body.style.overflow = originalOverflow;
-    }, 6000);
+    unlockScrollRef.current = () => {
+      document.body.style.overflow = "auto";
+      ScrollTrigger.refresh();
+    };
 
     return () => {
-      clearTimeout(timer);
-      document.body.style.overflow = originalOverflow;
+      document.body.style.overflow = "auto";
     };
   }, []);
 
-  useEffect(() => {
-    const img = new Image();
-    img.src = "/bgimg.jpg";
-    img.onload = () => setImageLoaded(true);
+  const drawFrame = useCallback((index) => {
+    const canvas = canvasRef.current;
+    const img = framesRef.current[index];
+    if (!canvas || !img?.complete) return;
+
+    const ctx = canvas.getContext("2d");
+    drawImageCover(ctx, img, canvas.width, canvas.height);
   }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const syncSize = () => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      if (canvas.width === w && canvas.height === h) return;
+      canvas.width = w;
+      canvas.height = h;
+      drawFrame(currentFrameRef.current);
+    };
+
+    const ro = new ResizeObserver(syncSize);
+    ro.observe(canvas);
+    syncSize();
+
+    return () => ro.disconnect();
+  }, [drawFrame]);
 
   const updateProgress = useCallback((progress) => {
     setLoadingProgress(Math.round(progress * 100));
@@ -46,142 +143,124 @@ const Hero = () => {
 
   useGSAP(
     () => {
-      if (!imageLoaded) return;
+      if (!framesLoaded) return;
 
-      const ctx = gsap.context(() => {
-        gsap.set(".split, .split-reverse", {
-          autoAlpha: 0,
-        });
+      gsap.set(".split, .split-reverse", { autoAlpha: 0 });
 
-        const splitNormal = new SplitText(".split", {
-          type: "chars",
-        });
+      const splitNormal = new SplitText(".split", { type: "chars" });
+      const splitReverse = new SplitText(".split-reverse", { type: "chars" });
 
-        const splitReverse = new SplitText(".split-reverse", {
-          type: "chars",
-        });
+      splitInstancesRef.current = [splitNormal, splitReverse];
 
-        splitInstancesRef.current = [splitNormal, splitReverse];
+      gsap.set(".split, .split-reverse", { autoAlpha: 1 });
+      gsap.set(splitNormal.chars, {
+        y: -300,
+        autoAlpha: 0,
+        filter: "blur(10px)",
+      });
+      gsap.set(splitReverse.chars, {
+        y: 300,
+        autoAlpha: 0,
+        filter: "blur(10px)",
+      });
 
-        gsap.set(".split, .split-reverse", {
-          autoAlpha: 1,
-        });
+      setIsReady(true);
+      drawFrame(0);
 
-        gsap.set(splitNormal.chars, {
-          y: -300,
-          autoAlpha: 0,
-          filter: "blur(10px)",
-        });
-
-        gsap.set(splitReverse.chars, {
-          y: 300,
-          autoAlpha: 0,
-          filter: "blur(10px)",
-        });
-
-        setIsReady(true);
-
-        const tl = gsap.timeline({
-          defaults: {
-            ease: "power4.out",
+      function setupScrollSequence() {
+        ScrollTrigger.create({
+          trigger: heroRef.current,
+          start: "top top",
+          end: `+=${SCROLL_DISTANCE}`,
+          pin: true,
+          scrub: 2,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const target = Math.round(self.progress * (FRAME_COUNT - 1));
+            if (target === currentFrameRef.current) return;
+            currentFrameRef.current = target;
+            drawFrame(target);
           },
+        });
+      }
+
+      gsap
+        .timeline({
+          defaults: { ease: "power4.out" },
           onComplete: () => {
-            document.body.style.overflow = "auto";
+            unlockScrollRef.current?.();
+            setupScrollSequence();
           },
-        });
-
-        tl.from(titlesRef.current, {
+        })
+        .from(titlesRef.current, {
           yPercent: 100,
           opacity: 0,
           stagger: 0.3,
           duration: 1,
         })
-          .from(
-            progressBarRef.current,
-            {
-              opacity: 0,
-              duration: 0.5,
+        .from(progressBarRef.current, { opacity: 0, duration: 0.5 }, "<0.3")
+        .to(
+          {},
+          {
+            duration: 2.5,
+            ease: "none",
+            onUpdate: function () {
+              updateProgress(this.progress());
             },
-            "<0.3",
-          )
-          .to(
-            {},
-            {
-              duration: 2.5,
-              ease: "none",
-              onUpdate: function () {
-                updateProgress(this.progress());
-              },
-            },
-          )
-          .to([titlesRef.current, progressBarRef.current], {
-            yPercent: -100,
-            opacity: 0,
-            stagger: 0.15,
-            duration: 0.6,
-          })
-          .to(
-            introRef.current,
-            {
-              yPercent: -100,
-              duration: 1.2,
-              ease: "circ.out",
-            },
-            "-=0.4",
-          )
-          .from(
-            bgImgRef.current,
-            {
-              yPercent: 100,
-              duration: 1.2,
-              ease: "circ.out",
-            },
-            "<",
-          )
-          .to(
-            splitNormal.chars,
-            {
-              duration: 1,
-              y: 0,
-              autoAlpha: 1,
-              filter: "blur(0px)",
-              stagger: 0.05,
-              ease: "power4.out",
-            },
-            "-=0.6",
-          )
-          .to(
-            splitReverse.chars,
-            {
-              duration: 1,
-              y: 0,
-              autoAlpha: 1,
-              filter: "blur(0px)",
-              stagger: {
-                each: 0.05,
-                from: "end",
-              },
-              ease: "power4.out",
-            },
-            "<",
-          );
-      }, componentRef);
+          },
+        )
+        .to([titlesRef.current, progressBarRef.current], {
+          yPercent: -100,
+          opacity: 0,
+          stagger: 0.15,
+          duration: 0.6,
+        })
+        .to(
+          introRef.current,
+          { yPercent: -100, duration: 1.2, ease: "circ.out" },
+          "-=0.4",
+        )
+        .from(
+          canvasRef.current,
+          { yPercent: 100, duration: 1.2, ease: "circ.out" },
+          "<",
+        )
+        .to(
+          splitNormal.chars,
+          {
+            duration: 1,
+            y: 0,
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            stagger: 0.05,
+            ease: "power4.out",
+          },
+          "-=0.6",
+        )
+        .to(
+          splitReverse.chars,
+          {
+            duration: 1,
+            y: 0,
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            stagger: { each: 0.05, from: "end" },
+            ease: "power4.out",
+          },
+          "<",
+        );
 
       return () => {
-        ctx.revert();
-
-        splitInstancesRef.current.forEach((instance) => {
-          if (instance && instance.revert) {
-            instance.revert();
-          }
-        });
+        splitInstancesRef.current.forEach((i) => i?.revert());
         splitInstancesRef.current = [];
-
         document.body.style.overflow = "auto";
         setIsReady(false);
       };
     },
-    { dependencies: [imageLoaded, updateProgress], scope: componentRef },
+    {
+      dependencies: [framesLoaded, updateProgress, drawFrame],
+      scope: componentRef,
+    },
   );
 
   return (
@@ -193,16 +272,17 @@ const Hero = () => {
         progressBarRef={progressBarRef}
       />
 
-      <div className="min-h-screen relative">
-        <img
-          src="/bgimg.jpg"
-          alt="background image"
-          ref={bgImgRef}
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-90"
+      <div ref={heroRef} className="min-h-screen relative">
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full"
           style={{ willChange: "transform" }}
         />
 
-        <div ref={heroRef} className="p-16 relative z-10 flex flex-col gap-4">
+        <div className="absolute inset-0 bg-black/25 z-[1]" />
+
+        <div className="p-16 relative z-10 flex flex-col gap-4">
           <h1
             className="text-9xl font-extrabold uppercase tracking-wider split hero-text"
             style={{
