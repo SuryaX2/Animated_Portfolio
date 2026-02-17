@@ -7,13 +7,9 @@ import IntroSlide from "./IntroSlide";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
 const FRAME_COUNT = 300;
 const SCROLL_DISTANCE = "300%";
 const FRAME_PATH = (n) => `/Frames/frame_${String(n).padStart(4, "0")}.jpeg`;
-
-// ─── Frame preloader ──────────────────────────────────────────────────────────
 
 const preloadFrames = () => {
   const images = new Array(FRAME_COUNT);
@@ -24,19 +20,13 @@ const preloadFrames = () => {
     images[i] = img;
     return new Promise((resolve) => {
       img.onload = resolve;
-      img.onerror = resolve; // never block on a missing frame
+      img.onerror = resolve;
     });
   });
 
   return Promise.all(promises).then(() => images);
 };
 
-// ─── drawImageCover ───────────────────────────────────────────────────────────
-
-/**
- * Replicates CSS `object-fit: cover; object-position: center` for a <canvas>.
- * Crops from the centre so the image always fills the canvas without distortion.
- */
 const drawImageCover = (ctx, img, canvasW, canvasH) => {
   const imgRatio = img.naturalWidth / img.naturalHeight;
   const canvasRatio = canvasW / canvasH;
@@ -44,13 +34,11 @@ const drawImageCover = (ctx, img, canvasW, canvasH) => {
   let srcX, srcY, srcW, srcH;
 
   if (imgRatio > canvasRatio) {
-    // Image is wider — crop the left and right sides
     srcH = img.naturalHeight;
     srcW = srcH * canvasRatio;
     srcX = (img.naturalWidth - srcW) / 2;
     srcY = 0;
   } else {
-    // Image is taller — crop the top and bottom
     srcW = img.naturalWidth;
     srcH = srcW / canvasRatio;
     srcX = 0;
@@ -59,8 +47,6 @@ const drawImageCover = (ctx, img, canvasW, canvasH) => {
 
   ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, canvasW, canvasH);
 };
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 const Hero = () => {
   const componentRef = useRef(null);
@@ -74,11 +60,9 @@ const Hero = () => {
   const [framesLoaded, setFramesLoaded] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-  const framesRef = useRef([]); // raw Image objects
-  const currentFrameRef = useRef(0); // tracks last-drawn frame index
+  const framesRef = useRef([]);
+  const currentFrameRef = useRef(0);
   const splitInstancesRef = useRef([]);
-
-  // ── Preload all frames once on mount ───────────────────────────────────────
 
   useEffect(() => {
     preloadFrames().then((images) => {
@@ -86,12 +70,6 @@ const Hero = () => {
       setFramesLoaded(true);
     });
   }, []);
-
-  // ── Scroll lock ────────────────────────────────────────────────────────────
-  //
-  // Lock scroll immediately on mount. We expose `unlockScrollRef` so that
-  // the GSAP timeline can call it synchronously inside `onComplete` — no
-  // setTimeout, no race conditions, no undefined variable.
 
   const unlockScrollRef = useRef(null);
 
