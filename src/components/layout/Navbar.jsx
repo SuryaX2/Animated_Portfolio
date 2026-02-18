@@ -3,7 +3,7 @@ import {
   RiBnbLine,
   RiCloseLargeLine,
   RiGithubFill,
-  RiInstagramFill,
+  RiInstagramLine,
   RiLinkedinBoxFill,
   RiMenuLine,
 } from "@remixicon/react";
@@ -42,7 +42,7 @@ const SOCIAL_LINKS = [
     label: "GitHub",
   },
   {
-    icon: RiInstagramFill,
+    icon: RiInstagramLine,
     href: "https://www.instagram.com/surya.sekhar.sharma/",
     label: "Instagram",
   },

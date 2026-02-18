@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useRef, useEffect, useState, useCallback } from "react";
 import IntroSlide from "./IntroSlide";
+import HeroFooter from "../layout/HeroFooter";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -11,7 +12,7 @@ const FRAME_COUNT = 300;
 const SCROLL_DISTANCE = "300%";
 const FRAME_PATH = (n) => `/Frames/frame_${String(n).padStart(4, "0")}.jpeg`;
 
-const preloadFrames = () => {
+const preloadFrames = async () => {
   const images = new Array(FRAME_COUNT);
 
   const promises = Array.from({ length: FRAME_COUNT }, (_, i) => {
@@ -24,7 +25,8 @@ const preloadFrames = () => {
     });
   });
 
-  return Promise.all(promises).then(() => images);
+  await Promise.all(promises);
+  return images;
 };
 
 const drawImageCover = (ctx, img, canvasW, canvasH) => {
@@ -55,6 +57,7 @@ const Hero = () => {
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
   const progressBarRef = useRef(null);
+  const heroFooterRef = useRef(null);
 
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [framesLoaded, setFramesLoaded] = useState(false);
@@ -142,6 +145,10 @@ const Hero = () => {
         filter: "blur(10px)",
       });
 
+      const footerItems =
+        heroFooterRef.current?.querySelectorAll(".hero-footer-item");
+      gsap.set(footerItems, { y: 30, autoAlpha: 0, filter: "blur(6px)" });
+
       setIsReady(true);
       drawFrame(0);
 
@@ -226,6 +233,18 @@ const Hero = () => {
             ease: "power4.out",
           },
           "<",
+        )
+        .to(
+          footerItems,
+          {
+            y: 0,
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 0.9,
+            stagger: 0.03,
+            ease: "power4.out",
+          },
+          "-=1",
         );
 
       return () => {
@@ -258,8 +277,6 @@ const Hero = () => {
           style={{ willChange: "transform" }}
         />
 
-        <div className="absolute inset-0 bg-black/25 z-[1]" />
-
         <div className="p-16 relative z-10 flex flex-col gap-4">
           <h1
             className="text-9xl font-extrabold uppercase tracking-wider split hero-text"
@@ -280,6 +297,7 @@ const Hero = () => {
             Developer
           </h1>
         </div>
+        <HeroFooter ref={heroFooterRef} />
       </div>
     </div>
   );
