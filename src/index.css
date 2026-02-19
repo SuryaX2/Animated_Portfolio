@@ -31,6 +31,5 @@ body {
 }
 
 .hero-text {
-  opacity: 0;
   visibility: hidden;
 }

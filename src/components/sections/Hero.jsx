@@ -57,11 +57,11 @@ const Hero = () => {
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
   const progressBarRef = useRef(null);
+
   const heroFooterRef = useRef(null);
 
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [framesLoaded, setFramesLoaded] = useState(false);
-  const [isReady, setIsReady] = useState(false);
 
   const framesRef = useRef([]);
   const currentFrameRef = useRef(0);
@@ -130,10 +130,8 @@ const Hero = () => {
 
       const splitNormal = new SplitText(".split", { type: "chars" });
       const splitReverse = new SplitText(".split-reverse", { type: "chars" });
-
       splitInstancesRef.current = [splitNormal, splitReverse];
 
-      gsap.set(".split, .split-reverse", { autoAlpha: 1 });
       gsap.set(splitNormal.chars, {
         y: -300,
         autoAlpha: 0,
@@ -144,15 +142,11 @@ const Hero = () => {
         autoAlpha: 0,
         filter: "blur(10px)",
       });
+      gsap.set(".split, .split-reverse", { autoAlpha: 1 });
 
-      const footerItems =
-        heroFooterRef.current?.querySelectorAll(".hero-footer-item");
-      gsap.set(footerItems, { y: 30, autoAlpha: 0, filter: "blur(6px)" });
-
-      setIsReady(true);
       drawFrame(0);
 
-      function setupScrollSequence() {
+      const setupScrollSequence = () => {
         ScrollTrigger.create({
           trigger: heroRef.current,
           start: "top top",
@@ -167,8 +161,7 @@ const Hero = () => {
             drawFrame(target);
           },
         });
-      }
-
+      };
       gsap
         .timeline({
           defaults: { ease: "power4.out" },
@@ -213,45 +206,31 @@ const Hero = () => {
         .to(
           splitNormal.chars,
           {
-            duration: 1,
             y: 0,
             autoAlpha: 1,
             filter: "blur(0px)",
+            duration: 1,
             stagger: 0.05,
-            ease: "power4.out",
           },
           "-=0.6",
         )
         .to(
           splitReverse.chars,
           {
-            duration: 1,
             y: 0,
             autoAlpha: 1,
             filter: "blur(0px)",
+            duration: 1,
             stagger: { each: 0.05, from: "end" },
-            ease: "power4.out",
           },
           "<",
         )
-        .to(
-          footerItems,
-          {
-            y: 0,
-            autoAlpha: 1,
-            filter: "blur(0px)",
-            duration: 0.9,
-            stagger: 0.03,
-            ease: "power4.out",
-          },
-          "-=1",
-        );
+        .call(() => heroFooterRef.current?.play(), [], "<");
 
       return () => {
         splitInstancesRef.current.forEach((i) => i?.revert());
         splitInstancesRef.current = [];
         document.body.style.overflow = "auto";
-        setIsReady(false);
       };
     },
     {
@@ -280,23 +259,18 @@ const Hero = () => {
         <div className="p-16 relative z-10 flex flex-col gap-4">
           <h1
             className="text-9xl font-extrabold uppercase tracking-wider split hero-text"
-            style={{
-              willChange: "transform, opacity",
-              visibility: isReady ? "visible" : "hidden",
-            }}
+            style={{ willChange: "transform, opacity" }}
           >
             Creative
           </h1>
           <h1
             className="text-9xl font-extrabold uppercase text-right tracking-wider split-reverse hero-text"
-            style={{
-              willChange: "transform, opacity",
-              visibility: isReady ? "visible" : "hidden",
-            }}
+            style={{ willChange: "transform, opacity" }}
           >
             Developer
           </h1>
         </div>
+
         <HeroFooter ref={heroFooterRef} />
       </div>
     </div>
