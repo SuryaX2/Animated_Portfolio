@@ -66,6 +66,8 @@ const Hero = () => {
   const framesRef = useRef([]);
   const currentFrameRef = useRef(0);
   const splitInstancesRef = useRef([]);
+  const scrollTriggerRef = useRef(null);
+  const pendingRAFRef = useRef(null);
 
   useEffect(() => {
     preloadFrames().then((images) => {
@@ -147,19 +149,35 @@ const Hero = () => {
       drawFrame(0);
 
       const setupScrollSequence = () => {
-        ScrollTrigger.create({
+        if (scrollTriggerRef.current) {
+          scrollTriggerRef.current.kill();
+        }
+
+        if (pendingRAFRef.current !== null) {
+          cancelAnimationFrame(pendingRAFRef.current);
+          pendingRAFRef.current = null;
+        }
+
+        scrollTriggerRef.current = ScrollTrigger.create({
           trigger: heroRef.current,
           start: "top top",
           end: `+=${SCROLL_DISTANCE}`,
           pin: true,
+          pinSpacing: true,
           scrub: 2,
           anticipatePin: 1,
+          refreshPriority: 1,
           onUpdate: (self) => {
             const target = Math.round(self.progress * (FRAME_COUNT - 1));
             if (target === currentFrameRef.current) return;
             currentFrameRef.current = target;
             drawFrame(target);
           },
+        });
+        
+        pendingRAFRef.current = requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+          pendingRAFRef.current = null;
         });
       };
       gsap
@@ -230,7 +248,16 @@ const Hero = () => {
       return () => {
         splitInstancesRef.current.forEach((i) => i?.revert());
         splitInstancesRef.current = [];
+        if (scrollTriggerRef.current) {
+          scrollTriggerRef.current.kill();
+          scrollTriggerRef.current = null;
+        }
+        if (pendingRAFRef.current !== null) {
+          cancelAnimationFrame(pendingRAFRef.current);
+          pendingRAFRef.current = null;
+        }
         document.body.style.overflow = "auto";
+        ScrollTrigger.refresh();
       };
     },
     {
