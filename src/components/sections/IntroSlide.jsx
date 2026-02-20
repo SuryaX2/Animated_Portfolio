@@ -5,7 +5,7 @@ const IntroSlide = memo(
     return (
       <div
         ref={introRef}
-        className="min-h-screen flex items-start justify-center bg-gray-100 text-black text-6xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl flex-col gap-4 sm:gap-6 md:gap-8 font-bold tracking-tighter absolute top-0 left-0 w-full z-10 uppercase overflow-hidden"
+        className="min-h-screen flex items-start justify-center bg-gray-100 text-black text-6xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl flex-col gap-4 sm:gap-6 md:gap-8 font-bold tracking-tighter fixed inset-0 w-full z-10 uppercase overflow-hidden"
         style={{ willChange: "transform" }}
       >
         <h1

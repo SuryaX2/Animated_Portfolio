@@ -66,7 +66,7 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
           autoAlpha: 1,
           filter: "blur(0px)",
           duration: 1,
-          ease: "bounce.out",
+          ease: "circ.out",
         })
         .to(
           taglineRef.current,
