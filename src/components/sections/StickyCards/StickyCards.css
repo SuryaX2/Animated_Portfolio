@@ -8,11 +8,11 @@
     position: relative;
     width: 100%;
     height: 100svh;
-    padding: 1.5rem;
+    padding: 3rem;
     display: flex;
     gap: 3rem;
     will-change: transform;
-    background-color: bisque;
+    background-color: #fddaaf;
     color: black;
 }
 
@@ -52,6 +52,7 @@
 
 .sticky-card-img img {
     aspect-ratio: 5/3;
+    object-fit: cover;
 }
 
 .sticky-card-copy {

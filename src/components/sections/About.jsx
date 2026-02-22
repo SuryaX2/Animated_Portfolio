@@ -181,7 +181,7 @@ const About = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="min-h-screen bg-black flex flex-col items-start justify-between py-32 px-8 overflow-x-hidden"
+      className="min-h-screen bg-black flex flex-col items-start justify-between py-16 px-8 overflow-x-hidden"
       aria-label="About Surya Sekhar Sharma"
     >
       <div className="flex items-center justify-center mb-16 w-full h-full">
