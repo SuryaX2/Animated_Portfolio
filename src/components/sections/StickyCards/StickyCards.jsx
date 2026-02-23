@@ -91,7 +91,7 @@ const StickyCards = () => {
   return (
     <div className="sticky-cards" ref={containerRef}>
       {cards.map((card, index) => (
-        <div className="sticky-card" key={index}>
+        <div className="sticky-card rounded-t-4xl" key={index}>
           <div className="sticky-card-index">
             <h1 className="text-9xl font-medium">({card.index})</h1>
           </div>
