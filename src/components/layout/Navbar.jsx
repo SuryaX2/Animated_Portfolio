@@ -272,7 +272,7 @@ const Navbar = () => {
       {/* Main Navbar */}
       <nav className="fixed top-0 left-0 w-full px-8 py-1 flex items-center justify-between pointer-events-auto text-white z-[100] mix-blend-difference">
         <a
-          href="#home"
+          href="#hero"
           className="w-8 h-8 transition-transform duration-300 hover:scale-110"
           aria-label="Home"
         >
@@ -460,6 +460,10 @@ const Navbar = () => {
         .line-inner {
           display: block;
           will-change: transform, opacity;
+        }
+
+        html {
+          scroll-behavior: smooth;
         }
       `}</style>
     </>
