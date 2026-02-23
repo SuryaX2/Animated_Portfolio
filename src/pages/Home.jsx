@@ -7,6 +7,7 @@ import Education from "../components/sections/Education";
 import Projects from "../components/sections/Projects";
 import Experience from "../components/sections/Experience";
 import Contact from "../components/sections/Contact";
+import Approach from "../components/sections/Approach";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
       <Hero />
       <About />
       <Skills />
+      <Approach />
       <Education />
       <Projects />
       <Experience />
