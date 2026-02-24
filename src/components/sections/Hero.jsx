@@ -5,6 +5,7 @@ import { SplitText } from "gsap/SplitText";
 import { useRef, useEffect, useState, useCallback } from "react";
 import IntroSlide from "./IntroSlide";
 import HeroFooter from "../layout/HeroFooter";
+import { useLenisContext } from "../../context/LenisContext";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -51,13 +52,14 @@ const drawImageCover = (ctx, img, canvasW, canvasH) => {
 };
 
 const Hero = () => {
+  const lenisRef = useLenisContext();
+
   const componentRef = useRef(null);
   const introRef = useRef(null);
   const titlesRef = useRef([]);
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
   const progressBarRef = useRef(null);
-
   const heroFooterRef = useRef(null);
 
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -76,20 +78,23 @@ const Hero = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const lenis = lenisRef?.current;
+    lenis?.stop();
+
+    return () => {
+      lenis?.start();
+    };
+  }, [lenisRef]);
+
   const unlockScrollRef = useRef(null);
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-
     unlockScrollRef.current = () => {
-      document.body.style.overflow = "auto";
+      lenisRef?.current?.start();
       ScrollTrigger.refresh();
     };
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+  }, [lenisRef]);
 
   const drawFrame = useCallback((index) => {
     const canvas = canvasRef.current;
@@ -174,12 +179,13 @@ const Hero = () => {
             drawFrame(target);
           },
         });
-        
+
         pendingRAFRef.current = requestAnimationFrame(() => {
           ScrollTrigger.refresh();
           pendingRAFRef.current = null;
         });
       };
+
       gsap
         .timeline({
           defaults: { ease: "power4.out" },
@@ -256,7 +262,7 @@ const Hero = () => {
           cancelAnimationFrame(pendingRAFRef.current);
           pendingRAFRef.current = null;
         }
-        document.body.style.overflow = "auto";
+        lenisRef?.current?.start();
         ScrollTrigger.refresh();
       };
     },

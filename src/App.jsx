@@ -1,10 +1,16 @@
 import Home from "./pages/Home";
+import { useLenis } from "./hooks/useLenis";
+import { LenisContext } from "./context/LenisContext";
 
 function App() {
+  const lenisRef = useLenis();
+
   return (
-    <div className="min-h-screen">
-      <Home />
-    </div>
+    <LenisContext.Provider value={lenisRef}>
+      <div className="min-h-screen">
+        <Home />
+      </div>
+    </LenisContext.Provider>
   );
 }
 
