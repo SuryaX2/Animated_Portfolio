@@ -101,7 +101,7 @@ const About = () => {
                   fillMaskRect,
                   {
                     width: svgWidth,
-                    duration: 0.2,
+                    duration: 1,
                     ease: "power2.out",
                   },
                   "-=0.4",
@@ -110,7 +110,7 @@ const About = () => {
                   fillPath,
                   {
                     opacity: 1,
-                    duration: 0.4,
+                    duration: 1,
                     ease: "power2.out",
                   },
                   "-=0.5",
@@ -119,7 +119,7 @@ const About = () => {
                   strokePath,
                   {
                     strokeOpacity: 0,
-                    duration: 0.4,
+                    duration: 1,
                     ease: "power2.in",
                   },
                   "-=0.4",
@@ -132,7 +132,7 @@ const About = () => {
                     trigger: sectionRef.current,
                     start: "top 35%",
                     end: "bottom 20%",
-                    scrub: 1,
+                    scrub: 2,
                     invalidateOnRefresh: true,
                     refreshPriority: -1,
                   },
