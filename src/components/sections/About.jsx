@@ -131,7 +131,7 @@ const About = () => {
                   scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top 35%",
-                    end: "bottom 20%",
+                    end: "bottom 65%",
                     scrub: 2,
                     invalidateOnRefresh: true,
                     refreshPriority: -1,
@@ -259,7 +259,7 @@ const About = () => {
       </div>
 
       <p
-        className="fill-text m-0 max-w-full p-16"
+        className="fill-text m-0 max-w-full p-16 text-justify"
         style={{
           fontSize: "clamp(22px, 3.5vw, 46px)",
           fontWeight: 600,
@@ -282,7 +282,7 @@ const About = () => {
             display: "inline",
             willChange: "background-size",
           }}
-          className="uppercase tracking-wide text-7xl"
+          className="uppercase tracking-wide text-5xl"
         >
           {BIO_TEXT}
         </span>
