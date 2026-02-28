@@ -1,5 +1,6 @@
+import ProjectTitle from "./ProjectSection/ProjectTitle";
+import PinnedProjects from "./ProjectSection/PinnedProjects";
 import { RiExternalLinkLine, RiGithubFill } from "@remixicon/react";
-import PinnedProjects from "./PinnedProjects";
 
 const PROJECTS = [
   {
@@ -82,7 +83,7 @@ const ProjectCard = ({ project, index }) => {
             href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-8 py-3 rounded-full text-md font-semibold tracking-wide border border-white text-white transition-[border-color,transform, background-color] duration-200 hover:border-[#555] hover:text-black hover:bg-white"
+            className="inline-flex items-center gap-1.5 px-8 py-3 rounded-full text-md font-semibold tracking-wide border border-white text-white transition-[border-color,transform,background-color] duration-200 hover:border-[#555] hover:text-black hover:bg-white"
           >
             <RiGithubFill size={25} />
             GitHub
@@ -107,44 +108,38 @@ const ProjectImage = ({ project }) => (
   </div>
 );
 
-const Projects = () => {
-  return (
-    <section
-      id="projects"
-      className="min-h-screen bg-[#0f0f0f]"
-      aria-label="Projects"
-    >
-      <div>
-        <section className="relative w-screen h-screen p-8 text-center content-center">
-          <h1 className="text-9xl font-medium uppercase leading-none md:w-2/3 w-full my-0 mx-auto">
-            My Projects
-          </h1>
-        </section>
+const Projects = () => (
+  <section
+    id="projects"
+    className="min-h-screen bg-[#0f0f0f]"
+    aria-label="Projects"
+  >
+    <div>
+      <ProjectTitle />
 
-        <PinnedProjects
-          leftWidth="w-[50%]"
-          leftContent={PROJECTS.map((p, i) => (
-            <ProjectCard
-              key={p.id}
-              project={p}
-              index={i}
-              total={PROJECTS.length}
-            />
-          ))}
-          rightContent={PROJECTS.map((p, i) => (
-            <ProjectImage
-              key={p.id}
-              project={p}
-              index={i}
-              total={PROJECTS.length}
-            />
-          ))}
-        />
+      <PinnedProjects
+        leftWidth="w-[50%]"
+        leftContent={PROJECTS.map((p, i) => (
+          <ProjectCard
+            key={p.id}
+            project={p}
+            index={i}
+            total={PROJECTS.length}
+          />
+        ))}
+        rightContent={PROJECTS.map((p, i) => (
+          <ProjectImage
+            key={p.id}
+            project={p}
+            index={i}
+            total={PROJECTS.length}
+          />
+        ))}
+      />
 
-        <div className="h-[10vh]" />
-      </div>
-    </section>
-  );
-};
+      <div className="h-[10vh]" />
+    </div>
+  </section>
+);
 
 export default Projects;
