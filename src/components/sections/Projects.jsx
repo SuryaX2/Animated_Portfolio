@@ -107,42 +107,44 @@ const ProjectImage = ({ project }) => (
   </div>
 );
 
-const Projects = () => (
-  <section
-    id="projects"
-    className="min-h-screen bg-[#0f0f0f]"
-    aria-label="Projects"
-  >
-    <div>
-      <section className="relative w-screen h-screen p-8 text-center content-center">
-        <h1 className="text-9xl font-medium uppercase leading-none md:w-2/3 w-full my-0 mx-auto">
-          My Projects
-        </h1>
-      </section>
+const Projects = () => {
+  return (
+    <section
+      id="projects"
+      className="min-h-screen bg-[#0f0f0f]"
+      aria-label="Projects"
+    >
+      <div>
+        <section className="relative w-screen h-screen p-8 text-center content-center">
+          <h1 className="text-9xl font-medium uppercase leading-none md:w-2/3 w-full my-0 mx-auto">
+            My Projects
+          </h1>
+        </section>
 
-      <PinnedProjects
-        leftWidth="w-[50%]"
-        leftContent={PROJECTS.map((p, i) => (
-          <ProjectCard
-            key={p.id}
-            project={p}
-            index={i}
-            total={PROJECTS.length}
-          />
-        ))}
-        rightContent={PROJECTS.map((p, i) => (
-          <ProjectImage
-            key={p.id}
-            project={p}
-            index={i}
-            total={PROJECTS.length}
-          />
-        ))}
-      />
+        <PinnedProjects
+          leftWidth="w-[50%]"
+          leftContent={PROJECTS.map((p, i) => (
+            <ProjectCard
+              key={p.id}
+              project={p}
+              index={i}
+              total={PROJECTS.length}
+            />
+          ))}
+          rightContent={PROJECTS.map((p, i) => (
+            <ProjectImage
+              key={p.id}
+              project={p}
+              index={i}
+              total={PROJECTS.length}
+            />
+          ))}
+        />
 
-      <div className="h-[10vh]" />
-    </div>
-  </section>
-);
+        <div className="h-[10vh]" />
+      </div>
+    </section>
+  );
+};
 
 export default Projects;
