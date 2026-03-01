@@ -9,7 +9,7 @@ const PROJECTS = [
     tag: "Full-Stack · MERN",
     description:
       "JWT-secured REST API with full CRUD operations across categories, products, suppliers, customers, purchases, and orders. Features dashboard metrics, stock alerts, and top-product rankings. Built with the MERN stack and deployed on Vercel.",
-    image: "/me.jpg",
+    image: "/InventoryPro.png",
     alt: "InventoryPro — Inventory Management System",
     deployUrl: "https://inventorypro-ims.vercel.app/",
     githubUrl: "https://github.com/SuryaX2/IMS",
@@ -21,7 +21,7 @@ const PROJECTS = [
     tag: "Full-Stack · MERN",
     description:
       "A full-stack MERN application with secure authentication and separate admin/user dashboards. Admins can add, edit, and delete books and manage user borrow/return requests. Deployed on Vercel with Cloudinary for book image storage.",
-    image: "/me.jpg",
+    image: "/LMS.png",
     alt: "LMS — Library Management System",
     deployUrl: "https://lms-7phy.vercel.app/",
     githubUrl: "https://github.com/SuryaX2/LMS",
@@ -95,15 +95,13 @@ const ProjectCard = ({ project, index }) => {
 };
 
 const ProjectImage = ({ project }) => (
-  <div className="relative w-full h-150 rounded-2xl overflow-hidden">
+  <div className="relative w-full h-full min-h-125 rounded-2xl overflow-hidden">
     <img
       src={project.image}
       alt={project.alt}
       loading="lazy"
       decoding="async"
-      width={900}
-      height={640}
-      className="pinned-project-img w-full h-full object-cover object-center block"
+      className="pinned-project-img absolute inset-0 w-full h-full object-cover block"
     />
   </div>
 );
