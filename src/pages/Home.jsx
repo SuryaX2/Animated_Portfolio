@@ -8,6 +8,7 @@ import Projects from "../components/sections/Projects";
 import Experience from "../components/sections/Experience";
 import Contact from "../components/sections/Contact";
 import Approach from "../components/sections/Approach";
+import WhatIDo from "../components/sections/WhatIDo/WhatIDo";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
       <CustomCursor />
       <Hero />
       <About />
+      <WhatIDo />
       <Skills />
       <Approach />
       <Education />
