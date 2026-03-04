@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+.ec-carousel {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  padding: 3.5rem;
+  overflow: hidden;
+  background-color: #1f1f1f;
+}
+
+.ec-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.ec-slides {
+  position: relative;
+  height: 100%;
+  display: flex;
+  will-change: transform;
+}
+
+.ec-slide {
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+
+.ec-img {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.ec-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+  z-index: 1;
+}
+
+.ec-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  will-change: transform;
+  transform: translateX(0) scale(1.35);
+  transform-origin: top center;
+
+}
+
+.ec-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2.5rem 3rem;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.ec-title {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  height: auto;
+}
+
+.ec-title h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  color: #ffffff;
+  font-size: clamp(60px, 8vw, 110px);
+  font-weight: 400;
+  letter-spacing: 2px;
+  line-height: 0.9;
+  will-change: transform;
+  margin: 0;
+}
+
+.ec-info {
+  text-align: right;
+  font-family: 'DM Sans', sans-serif;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ec-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ec-info span {
+  display: block;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.ec-counter {
+  position: absolute;
+  top: 2rem;
+  right: 3rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.4);
+  z-index: 3;
+}
