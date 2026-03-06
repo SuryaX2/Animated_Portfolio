@@ -4,9 +4,12 @@ import {
   RiGithubFill,
   RiInstagramLine,
 } from "@remixicon/react";
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
 import { forwardRef, useRef, useImperativeHandle } from "react";
+
+gsap.registerPlugin(SplitText);
 
 const SOCIAL_LINKS = [
   {
@@ -14,7 +17,11 @@ const SOCIAL_LINKS = [
     href: "https://www.linkedin.com/in/suryax2",
     label: "LinkedIn",
   },
-  { icon: RiGithubFill, href: "https://github.com/suryax2", label: "GitHub" },
+  {
+    icon: RiGithubFill,
+    href: "https://github.com/suryax2",
+    label: "GitHub",
+  },
   {
     icon: RiInstagramLine,
     href: "https://www.instagram.com/surya.sekhar.sharma/",
@@ -28,32 +35,49 @@ const formatMonthYear = (date) => {
   return `${month} '${year}`;
 };
 
-const INITIAL_STATES = {
-  arrow: { x: -50, y: -25, autoAlpha: 0, filter: "blur(4px)" },
-  tagline: { y: 50, autoAlpha: 0, filter: "blur(4px)" },
-  cta: { y: 40, autoAlpha: 0, scale: 0.9, filter: "blur(4px)" },
-  date: { y: 60, autoAlpha: 0, filter: "blur(10px)" },
-  social: { y: 30, autoAlpha: 0, filter: "blur(4px)" },
-};
-
 const HeroFooter = forwardRef(function HeroFooter(_, ref) {
   const containerRef = useRef(null);
-
   const arrowRef = useRef(null);
   const taglineRef = useRef(null);
   const ctaRef = useRef(null);
   const dateRef = useRef(null);
   const socialRefs = useRef([]);
-
   const tlRef = useRef(null);
+  const splitInstancesRef = useRef([]);
 
   useGSAP(
     () => {
-      gsap.set(arrowRef.current, INITIAL_STATES.arrow);
-      gsap.set(taglineRef.current, INITIAL_STATES.tagline);
-      gsap.set(ctaRef.current, INITIAL_STATES.cta);
-      gsap.set(dateRef.current, INITIAL_STATES.date);
-      gsap.set(socialRefs.current, INITIAL_STATES.social);
+      gsap.set(arrowRef.current, {
+        x: -50,
+        y: -25,
+        autoAlpha: 0,
+      });
+      gsap.set(ctaRef.current, {
+        y: "100%",
+        autoAlpha: 0,
+        scale: 0.9,
+      });
+      gsap.set(socialRefs.current, {
+        y: "100%",
+        autoAlpha: 0,
+      });
+
+      const taglineSplit = SplitText.create(taglineRef.current, {
+        type: "words",
+        wordClass: "word",
+        mask: "words",
+      });
+
+      const dateSplit = SplitText.create(dateRef.current, {
+        type: "chars",
+        charClass: "char",
+        mask: "chars",
+      });
+
+      splitInstancesRef.current = [taglineSplit, dateSplit];
+
+      gsap.set(taglineSplit.words, { y: "100%" });
+      gsap.set(dateSplit.chars, { y: "100%" });
 
       tlRef.current = gsap
         .timeline({
@@ -64,18 +88,18 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
           x: 0,
           y: 0,
           autoAlpha: 1,
-          filter: "blur(0px)",
           duration: 1,
           ease: "circ.out",
         })
         .to(
-          taglineRef.current,
+          taglineSplit.words,
           {
-            y: 0,
-            autoAlpha: 1,
-            filter: "blur(0px)",
+            y: "0%",
+            duration: 1,
+            ease: "power4.out",
+            stagger: 0.06,
           },
-          "-=0.75",
+          "<",
         )
         .to(
           ctaRef.current,
@@ -83,34 +107,36 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
             y: 0,
             autoAlpha: 1,
             scale: 1,
-            filter: "blur(0px)",
             ease: "back.out(1.2)",
           },
-          "-=0.7",
+          "<",
         )
         .to(
-          dateRef.current,
+          dateSplit.chars,
           {
-            y: 0,
-            autoAlpha: 1,
-            filter: "blur(0px)",
+            y: "0%",
             duration: 1,
             ease: "circ.out",
+            stagger: 0.05,
           },
-          "-=0.8",
+          "<",
         )
         .to(
           socialRefs.current,
           {
             y: 0,
             autoAlpha: 1,
-            filter: "blur(0px)",
-            duration: 0.6,
-            stagger: 0.09,
-            ease: "power3.out",
+            duration: 1,
+            stagger: 0.2,
+            ease: "circ.out",
           },
-          "-=0.7",
+          "<",
         );
+
+      return () => {
+        splitInstancesRef.current.forEach((i) => i?.revert());
+        splitInstancesRef.current = [];
+      };
     },
     { scope: containerRef },
   );
@@ -120,9 +146,10 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
   }));
 
   return (
-    <div
+    <footer
       ref={containerRef}
       className="absolute bottom-0 left-0 right-0 z-10 px-16 py-10"
+      aria-label="Hero footer"
     >
       <div className="grid grid-cols-2 items-end gap-8">
         <div className="flex flex-col items-start gap-4">
@@ -134,7 +161,7 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
 
           <p
             ref={taglineRef}
-            className="text-4xl font-semibold tracking-widest uppercase text-white leading-tight max-w-sm"
+            className="hero-footer-text text-4xl font-semibold tracking-widest uppercase text-white leading-tight max-w-sm"
           >
             Building digital&nbsp;experiences that breathe
           </p>
@@ -154,11 +181,12 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
           </a>
         </div>
 
-        <div className="flex items-end justify-end gap-10">
+        <div className="flex items-end justify-end gap-8">
           <time
             ref={dateRef}
-            className="text-8xl font-extrabold tracking-tighter text-white uppercase"
+            className="text-8xl font-extrabold text-white uppercase"
             dateTime={new Date().toISOString().slice(0, 7)}
+            style={{ paddingBottom: "0.1em", paddingInline: "0.05em" }}
           >
             {formatMonthYear(new Date())}
           </time>
@@ -173,7 +201,7 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={social.label}
+                  aria-label={`Visit ${social.label} profile`}
                   className="group flex items-center gap-2 text-white transition-colors duration-300"
                 >
                   <Icon className="w-10 h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
@@ -183,7 +211,7 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
           </nav>
         </div>
       </div>
-    </div>
+    </footer>
   );
 });
 

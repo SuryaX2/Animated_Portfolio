@@ -1,13 +1,14 @@
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "./Preloader/Preloader.css";
+import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
-import { useRef, useEffect, useState, useCallback } from "react";
-import IntroSlide from "./IntroSlide";
+import { CustomEase } from "gsap/CustomEase";
 import HeroFooter from "../layout/HeroFooter";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef, useEffect, useCallback } from "react";
 import { useLenisContext } from "../../context/LenisContext";
 
-gsap.registerPlugin(SplitText, ScrollTrigger);
+gsap.registerPlugin(SplitText, ScrollTrigger, CustomEase);
 
 const FRAME_COUNT = 300;
 const SCROLL_DISTANCE = "300%";
@@ -15,7 +16,6 @@ const FRAME_PATH = (n) => `/Frames/frame_${String(n).padStart(4, "0")}.jpeg`;
 
 const preloadFrames = async () => {
   const images = new Array(FRAME_COUNT);
-
   const promises = Array.from({ length: FRAME_COUNT }, (_, i) => {
     const img = new Image();
     img.src = FRAME_PATH(i + 1);
@@ -25,7 +25,6 @@ const preloadFrames = async () => {
       img.onerror = resolve;
     });
   });
-
   await Promise.all(promises);
   return images;
 };
@@ -33,9 +32,7 @@ const preloadFrames = async () => {
 const drawImageCover = (ctx, img, canvasW, canvasH) => {
   const imgRatio = img.naturalWidth / img.naturalHeight;
   const canvasRatio = canvasW / canvasH;
-
   let srcX, srcY, srcW, srcH;
-
   if (imgRatio > canvasRatio) {
     srcH = img.naturalHeight;
     srcW = srcH * canvasRatio;
@@ -47,7 +44,6 @@ const drawImageCover = (ctx, img, canvasW, canvasH) => {
     srcX = 0;
     srcY = (img.naturalHeight - srcH) / 2;
   }
-
   ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, canvasW, canvasH);
 };
 
@@ -55,39 +51,30 @@ const Hero = () => {
   const lenisRef = useLenisContext();
 
   const componentRef = useRef(null);
-  const introRef = useRef(null);
-  const titlesRef = useRef([]);
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
-  const progressBarRef = useRef(null);
   const heroFooterRef = useRef(null);
-
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [framesLoaded, setFramesLoaded] = useState(false);
+  const counterRef = useRef(null);
+  const counterContainerRef = useRef(null);
+  const heroBgRef = useRef(null);
+  const heroBgImgRef = useRef(null);
+  const headingRef = useRef(null);
+  const subheadingRef = useRef(null);
 
   const framesRef = useRef([]);
   const currentFrameRef = useRef(0);
   const splitInstancesRef = useRef([]);
   const scrollTriggerRef = useRef(null);
   const pendingRAFRef = useRef(null);
+  const unlockScrollRef = useRef(null);
 
   useEffect(() => {
+    lenisRef?.current?.stop();
     preloadFrames().then((images) => {
       framesRef.current = images;
-      setFramesLoaded(true);
     });
-  }, []);
-
-  useEffect(() => {
-    const lenis = lenisRef?.current;
-    lenis?.stop();
-
-    return () => {
-      lenis?.start();
-    };
+    return () => lenisRef?.current?.start();
   }, [lenisRef]);
-
-  const unlockScrollRef = useRef(null);
 
   useEffect(() => {
     unlockScrollRef.current = () => {
@@ -100,7 +87,6 @@ const Hero = () => {
     const canvas = canvasRef.current;
     const img = framesRef.current[index];
     if (!canvas || !img?.complete) return;
-
     const ctx = canvas.getContext("2d");
     drawImageCover(ctx, img, canvas.width, canvas.height);
   }, []);
@@ -108,7 +94,6 @@ const Hero = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const syncSize = () => {
       const w = canvas.offsetWidth;
       const h = canvas.offsetHeight;
@@ -117,52 +102,43 @@ const Hero = () => {
       canvas.height = h;
       drawFrame(currentFrameRef.current);
     };
-
     const ro = new ResizeObserver(syncSize);
     ro.observe(canvas);
     syncSize();
-
     return () => ro.disconnect();
   }, [drawFrame]);
 
-  const updateProgress = useCallback((progress) => {
-    setLoadingProgress(Math.round(progress * 100));
-  }, []);
-
   useGSAP(
     () => {
-      if (!framesLoaded) return;
+      CustomEase.create("hop", "0.9, 0, 0.1, 1");
 
-      gsap.set(".split, .split-reverse", { autoAlpha: 0 });
-
-      const splitNormal = new SplitText(".split", { type: "chars" });
-      const splitReverse = new SplitText(".split-reverse", { type: "chars" });
-      splitInstancesRef.current = [splitNormal, splitReverse];
-
-      gsap.set(splitNormal.chars, {
-        y: -300,
-        autoAlpha: 0,
-        filter: "blur(10px)",
+      const splitHeading = SplitText.create(headingRef.current, {
+        type: "chars",
+        charClass: "char",
+        mask: "chars",
       });
-      gsap.set(splitReverse.chars, {
-        y: 300,
-        autoAlpha: 0,
-        filter: "blur(10px)",
-      });
-      gsap.set(".split, .split-reverse", { autoAlpha: 1 });
 
-      drawFrame(0);
+      const splitHeadingReverse = SplitText.create(subheadingRef.current, {
+        type: "chars",
+        charClass: "char",
+        mask: "chars",
+      });
+
+      splitInstancesRef.current = [splitHeading, splitHeadingReverse];
+
+      gsap.set(splitHeading.chars, { y: "100%" });
+      gsap.set(splitHeadingReverse.chars, { y: "100%" });
+
+      const counter = { value: 0 };
+      const counterEl = counterRef.current;
+      const counterContainer = counterContainerRef.current;
 
       const setupScrollSequence = () => {
-        if (scrollTriggerRef.current) {
-          scrollTriggerRef.current.kill();
-        }
-
+        if (scrollTriggerRef.current) scrollTriggerRef.current.kill();
         if (pendingRAFRef.current !== null) {
           cancelAnimationFrame(pendingRAFRef.current);
           pendingRAFRef.current = null;
         }
-
         scrollTriggerRef.current = ScrollTrigger.create({
           trigger: heroRef.current,
           start: "top top",
@@ -179,77 +155,109 @@ const Hero = () => {
             drawFrame(target);
           },
         });
-
         pendingRAFRef.current = requestAnimationFrame(() => {
           ScrollTrigger.refresh();
           pendingRAFRef.current = null;
         });
       };
 
-      gsap
-        .timeline({
-          defaults: { ease: "power4.out" },
-          onComplete: () => {
-            unlockScrollRef.current?.();
-            setupScrollSequence();
-          },
-        })
-        .from(titlesRef.current, {
-          yPercent: 100,
-          opacity: 0,
-          stagger: 0.3,
-          duration: 1,
-        })
-        .from(progressBarRef.current, { opacity: 0, duration: 0.5 }, "<0.3")
-        .to(
-          {},
-          {
-            duration: 2.5,
-            ease: "none",
-            onUpdate: function () {
-              updateProgress(this.progress());
+      const tl = gsap.timeline();
+
+      tl.to(counter, {
+        value: 100,
+        duration: 3,
+        ease: "power4.out",
+        onUpdate: () => {
+          counterEl.textContent = Math.floor(counter.value);
+        },
+        onComplete: () => {
+          const counterSplit = SplitText.create(counterEl, {
+            type: "chars",
+            charClass: "digit",
+            mask: "chars",
+          });
+          gsap.to(counterSplit.chars, {
+            x: "-100%",
+            duration: 1,
+            ease: "power4.out",
+            stagger: 0.1,
+            delay: 1,
+            onComplete: () => {
+              counterContainer.style.display = "none";
             },
-          },
-        )
-        .to([titlesRef.current, progressBarRef.current], {
-          yPercent: -100,
-          opacity: 0,
-          stagger: 0.15,
-          duration: 0.6,
-        })
-        .to(
-          introRef.current,
-          { yPercent: -100, duration: 1.2, ease: "circ.out" },
-          "-=0.4",
-        )
-        .from(
-          canvasRef.current,
-          { yPercent: 100, duration: 1.2, ease: "circ.out" },
-          "<",
-        )
-        .to(
-          splitNormal.chars,
-          {
-            y: 0,
-            autoAlpha: 1,
-            filter: "blur(0px)",
-            duration: 1,
-            stagger: 0.05,
-          },
-          "-=0.6",
-        )
-        .to(
-          splitReverse.chars,
-          {
-            y: 0,
-            autoAlpha: 1,
-            filter: "blur(0px)",
-            duration: 1,
-            stagger: { each: 0.05, from: "end" },
-          },
-          "<",
-        )
-        .call(() => heroFooterRef.current?.play(), [], "<");
+          });
+        },
+      });
+
+      tl.to(
+        counterContainer,
+        { scale: 1, duration: 3, ease: "power4.out" },
+        "<",
+      );
+
+      tl.to(
+        heroBgRef.current,
+        {
+          clipPath: "polygon(35% 35%, 65% 35%, 65% 65%, 35% 65%)",
+          duration: 1.5,
+          ease: "hop",
+        },
+        4,
+      );
+
+      tl.to(
+        heroBgImgRef.current,
+        { scale: 1.5, duration: 1.5, ease: "hop" },
+        "<",
+      );
+
+      tl.to(
+        heroBgRef.current,
+        {
+          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          duration: 2,
+          ease: "hop",
+        },
+        5.5,
+      );
+
+      tl.to(heroBgImgRef.current, { scale: 1, duration: 2, ease: "hop" }, 5.5);
+
+      tl.to(
+        splitHeading.chars,
+        { y: "0%", duration: 1, ease: "power4.out", stagger: 0.075 },
+        6.5,
+      );
+
+      tl.to(
+        splitHeadingReverse.chars,
+        {
+          y: "0%",
+          duration: 1,
+          ease: "power4.out",
+          stagger: 0.075,
+        },
+        6.5,
+      );
+
+      tl.call(
+        () => {
+          heroFooterRef.current?.play();
+        },
+        [],
+        6.8,
+      );
+
+      tl.call(
+        () => {
+          unlockScrollRef.current?.();
+          drawFrame(0);
+          gsap.to(canvasRef.current, { opacity: 1, duration: 0.3 });
+          setupScrollSequence();
+        },
+        [],
+        7.5,
+      );
 
       return () => {
         splitInstancesRef.current.forEach((i) => i?.revert());
@@ -266,39 +274,65 @@ const Hero = () => {
         ScrollTrigger.refresh();
       };
     },
-    {
-      dependencies: [framesLoaded, updateProgress, drawFrame],
-      scope: componentRef,
-    },
+    { scope: componentRef },
   );
 
   return (
-    <div id="hero" className="relative overflow-x-hidden" ref={componentRef}>
-      <IntroSlide
-        introRef={introRef}
-        titlesRef={titlesRef}
-        loadingProgress={loadingProgress}
-        progressBarRef={progressBarRef}
-      />
+    <div
+      id="hero"
+      className="relative overflow-x-hidden bg-white"
+      ref={componentRef}
+    >
+      <div
+        ref={counterContainerRef}
+        className="preloader-counter"
+        aria-hidden="true"
+      >
+        <h1 ref={counterRef} className="leading-none">
+          0
+        </h1>
+      </div>
 
-      <div ref={heroRef} className="min-h-screen relative">
+      <div ref={heroRef} className="min-h-screen relative overflow-hidden">
+        <div
+          ref={heroBgRef}
+          className="hero-bg"
+          role="img"
+          aria-label="Hero background — Creative Developer"
+        >
+          <img
+            ref={heroBgImgRef}
+            src="/Frames/frame_0001.jpeg"
+            alt="Creative Developer — Surya Sekhar Sharma"
+            fetchpriority="high"
+          />
+        </div>
+
         <canvas
           ref={canvasRef}
           aria-hidden="true"
           className="absolute inset-0 w-full h-full"
-          style={{ willChange: "transform" }}
+          style={{ willChange: "transform", opacity: 0 }}
         />
 
-        <div className="p-16 relative z-10 flex flex-col gap-4">
+        <div className="p-16 relative z-10 flex flex-col gap-4 pointer-events-none select-none">
           <h1
-            className="text-9xl font-extrabold uppercase tracking-wider split hero-text"
-            style={{ willChange: "transform, opacity" }}
+            ref={headingRef}
+            className="hero-heading text-9xl font-extrabold uppercase tracking-wider text-white"
+            style={{
+              fontSize: "clamp(5rem, 9vw, 10rem)",
+              willChange: "transform",
+            }}
           >
             Creative
           </h1>
           <h1
-            className="text-9xl font-extrabold uppercase text-right tracking-wider split-reverse hero-text"
-            style={{ willChange: "transform, opacity" }}
+            ref={subheadingRef}
+            className="hero-heading text-9xl font-extrabold uppercase tracking-wider text-white text-right"
+            style={{
+              fontSize: "clamp(5rem, 9vw, 10rem)",
+              willChange: "transform",
+            }}
           >
             Developer
           </h1>
