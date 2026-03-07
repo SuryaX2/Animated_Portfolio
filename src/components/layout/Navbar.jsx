@@ -252,15 +252,15 @@ const Navbar = () => {
 
         <button
           onClick={toggleMenu}
-          className="group flex items-center gap-3 cursor-pointer bg-transparent border-none outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-full"
+          className="group flex items-center gap-3 cursor-pointer bg-white text-black border-2 px-2 py-1 outline-none rounded-full"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMenuOpen}
         >
-          <span className="text-sm font-semibold uppercase tracking-wider transition-opacity duration-300">
+          <span className="text-sm font-semibold tracking-tighter transition-opacity duration-300 p-1">
             {isMenuOpen ? "Close" : "Menu"}
           </span>
 
-          <div className="relative w-12 h-12 flex items-center justify-center border-2 border-white rounded-full overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.87,0,0.13,1)] group-hover:scale-110 group-hover:border-neutral-300">
+          <div className="relative w-10 h-10 flex items-center justify-center border-2 border-black bg-black rounded-full overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.87,0,0.13,1)]">
             <div
               className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
                 isMenuOpen
@@ -268,7 +268,7 @@ const Navbar = () => {
                   : "opacity-100 rotate-0 scale-100"
               }`}
             >
-              <RiMenuLine className="w-6 h-6" />
+              <RiMenuLine className="w-6 h-6 text-white" />
             </div>
 
             <div
@@ -278,7 +278,7 @@ const Navbar = () => {
                   : "opacity-0 -rotate-90 scale-75"
               }`}
             >
-              <RiCloseLargeLine className="w-6 h-6" />
+              <RiCloseLargeLine className="w-6 h-6 text-white" />
             </div>
           </div>
         </button>
