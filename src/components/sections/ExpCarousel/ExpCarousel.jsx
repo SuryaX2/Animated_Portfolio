@@ -18,10 +18,6 @@ const experiences = [
     id: 2,
     img: "/Experience/Exp2.jpg",
   },
-  {
-    id: 3,
-    img: "/Experience/Exp3.jpg",
-  },
 ];
 
 const ExpCarousel = () => {
