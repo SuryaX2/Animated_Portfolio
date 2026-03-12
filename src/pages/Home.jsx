@@ -1,6 +1,7 @@
 import Hero from "../components/sections/Hero";
 import Navbar from "../components/layout/Navbar";
 import About from "../components/sections/About";
+import SvgLine from "../components/layout/SvgLine";
 import Skills from "../components/sections/Skills";
 import Projects from "../components/sections/Projects";
 import Approach from "../components/sections/Approach";
@@ -17,6 +18,7 @@ const Home = () => {
       <CustomCursor />
       <Hero />
       <About />
+      <SvgLine />
       <WhatIDo />
       <Skills />
       <Approach />
