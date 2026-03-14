@@ -57,6 +57,7 @@ const Skills = () => {
         ref={introRef}
         className="w-screen h-screen overflow-hidden relative flex items-center"
       >
+        {/* Grid background — unchanged */}
         <div className="absolute inset-0 pointer-events-none select-none">
           <div
             className="absolute inset-0"
@@ -68,7 +69,8 @@ const Skills = () => {
           />
         </div>
 
-        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+        {/* Floating skill keywords — hidden on mobile to prevent overflow/clutter */}
+        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden hidden md:block">
           {skillKeywords.map((word, i) => {
             const row = Math.floor(i / 4);
             const col = i % 4;
@@ -90,6 +92,7 @@ const Skills = () => {
           })}
         </div>
 
+        {/* Section label — unchanged */}
         <div className="absolute top-10 left-8 pointer-events-none select-none flex items-center gap-3">
           <div className="w-8 h-px bg-white/50" />
           <span className="text-white/50 text-[10px] tracking-[0.4em] uppercase font-mono">
@@ -97,6 +100,7 @@ const Skills = () => {
           </span>
         </div>
 
+        {/* Scroll hint — unchanged */}
         <div className="absolute bottom-8 right-10 pointer-events-none select-none flex items-center gap-3">
           <span className="text-white/50 text-[10px] tracking-[0.4em] uppercase font-mono">
             Scroll
@@ -108,6 +112,7 @@ const Skills = () => {
           </div>
         </div>
 
+        {/* Decorative lines — unchanged */}
         <div
           className="absolute bottom-0 left-0 w-full h-px pointer-events-none"
           style={{
@@ -123,9 +128,23 @@ const Skills = () => {
           }}
         />
 
+        {/*
+          Scrolling heading:
+          - Desktop: text-[90vh] — unchanged, drives the marquee animation
+          - Mobile/tablet: scaled down via clamp so the heading height doesn't
+            push the section taller than h-screen and cause layout issues.
+          - The GSAP x animation still works at any font-size because it moves
+            on the x-axis only; the section is overflow-hidden.
+        */}
         <h1
           ref={textRef}
-          className="text-[90vh] font-extrabold leading-5 tracking-tight text-white uppercase text-nowrap will-change-transform"
+          className="
+            font-extrabold leading-none tracking-tight text-white uppercase text-nowrap
+            will-change-transform
+            text-[clamp(20vw,_40vh,_90vh)]
+            md:text-[clamp(25vw,_60vh,_90vh)]
+            lg:text-[90vh]
+          "
         >
           My <span className="text-[#fddaaf]">Skills</span>
         </h1>

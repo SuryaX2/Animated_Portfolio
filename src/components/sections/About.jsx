@@ -1,3 +1,4 @@
+// src/components/sections/About.jsx
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -64,23 +65,11 @@ const About = () => {
 
               const svgWidth = 1200;
 
-              gsap.set(maskRect, {
-                width: 0,
-                x: 0,
-              });
+              gsap.set(maskRect, { width: 0, x: 0 });
+              gsap.set(fillMaskRect, { width: 0, x: 0 });
+              gsap.set(strokePath, { strokeOpacity: 1 });
+              gsap.set(fillPath, { opacity: 0 });
 
-              gsap.set(fillMaskRect, {
-                width: 0,
-                x: 0,
-              });
-
-              gsap.set(strokePath, {
-                strokeOpacity: 1,
-              });
-
-              gsap.set(fillPath, {
-                opacity: 0,
-              });
               const tl = gsap.timeline({
                 scrollTrigger: {
                   trigger: sectionRef.current,
@@ -99,31 +88,20 @@ const About = () => {
               })
                 .to(
                   fillMaskRect,
-                  {
-                    width: svgWidth,
-                    duration: 1,
-                    ease: "power2.out",
-                  },
+                  { width: svgWidth, duration: 1, ease: "power2.out" },
                   "-=0.4",
                 )
                 .to(
                   fillPath,
-                  {
-                    opacity: 1,
-                    duration: 1,
-                    ease: "power2.out",
-                  },
+                  { opacity: 1, duration: 1, ease: "power2.out" },
                   "-=0.5",
                 )
                 .to(
                   strokePath,
-                  {
-                    strokeOpacity: 0,
-                    duration: 1,
-                    ease: "power2.in",
-                  },
+                  { strokeOpacity: 0, duration: 1, ease: "power2.in" },
                   "-=0.4",
                 );
+
               if (fillSpanRef.current) {
                 gsap.to(fillSpanRef.current, {
                   backgroundSize: "200% 200%",
@@ -158,10 +136,8 @@ const About = () => {
       return () => {
         pendingTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
         pendingTimeouts.length = 0;
-
         pendingRAF.forEach((rafId) => cancelAnimationFrame(rafId));
         pendingRAF.length = 0;
-
         ScrollTrigger.getAll().forEach((st) => {
           if (
             st.vars.trigger === sectionRef.current ||
@@ -170,7 +146,6 @@ const About = () => {
             st.kill();
           }
         });
-
         ScrollTrigger.refresh();
       };
     },
@@ -181,10 +156,10 @@ const About = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="min-h-screen bg-black flex flex-col items-start justify-between py-16 px-8 overflow-x-hidden"
+      className="lg:min-h-screen bg-black flex flex-col items-start justify-start py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden"
       aria-label="About Surya Sekhar Sharma"
     >
-      <div className="flex items-center justify-center mb-16 w-full h-full">
+      <div className="flex items-center justify-center mb-0 w-full h-full">
         <svg
           ref={svgRef}
           className="w-full h-auto"
@@ -259,9 +234,9 @@ const About = () => {
       </div>
 
       <p
-        className="fill-text m-0 max-w-full p-16 text-justify"
+        className="fill-text m-0 max-w-full text-justify px-4 pt-4 sm:px-8 sm:pt-6 lg:p-16"
         style={{
-          fontSize: "clamp(22px, 3.5vw, 46px)",
+          fontSize: "clamp(18px, 5vw, 46px)",
           fontWeight: 600,
           lineHeight: 1.5,
           letterSpacing: "-0.01em",
@@ -282,7 +257,7 @@ const About = () => {
             display: "inline",
             willChange: "background-size",
           }}
-          className="uppercase tracking-wide text-5xl"
+          className="uppercase tracking-wide"
         >
           {BIO_TEXT}
         </span>
