@@ -148,20 +148,20 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
   return (
     <footer
       ref={containerRef}
-      className="absolute bottom-0 left-0 right-0 z-10 px-16 py-10"
+      className="absolute bottom-0 left-0 right-0 z-10 px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-8 lg:px-16 lg:py-10"
       aria-label="Hero footer"
     >
-      <div className="grid grid-cols-2 items-end gap-8">
-        <div className="flex flex-col items-start gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 items-end gap-5 sm:gap-6 lg:gap-8">
+        <div className="flex flex-col items-start gap-3 sm:gap-4">
           <RiArrowRightDownLine
             ref={arrowRef}
-            className="w-16 h-16 text-white shrink-0"
+            className="w-9 h-9 sm:w-12 sm:h-12 lg:w-16 lg:h-16 text-white shrink-0"
             aria-hidden="true"
           />
 
           <p
             ref={taglineRef}
-            className="hero-footer-text text-4xl font-semibold tracking-widest uppercase text-white leading-tight max-w-sm"
+            className="hero-footer-text text-xl sm:text-2xl lg:text-4xl font-semibold tracking-widest uppercase text-white leading-tight max-w-xs sm:max-w-xs lg:max-w-sm"
           >
             Building digital&nbsp;experiences that breathe
           </p>
@@ -169,7 +169,7 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
           <a
             ref={ctaRef}
             href="#contact"
-            className="group relative inline-flex items-center gap-2 border-2 border-white rounded-full px-6 py-2.5 text-lg font-semibold uppercase tracking-widest text-white overflow-hidden transition-colors duration-500 whitespace-nowrap"
+            className="group relative inline-flex items-center gap-2 border-2 border-white rounded-full px-4 py-2 sm:px-5 sm:py-2 lg:px-6 lg:py-2.5 text-sm sm:text-base lg:text-lg font-semibold uppercase tracking-widest text-white overflow-hidden transition-colors duration-500 whitespace-nowrap"
           >
             <span
               className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-white transition-transform duration-500 ease-[cubic-bezier(0.87,0,0.13,1)]"
@@ -181,17 +181,24 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
           </a>
         </div>
 
-        <div className="flex items-end justify-end gap-8">
+        <div className="flex items-end justify-between lg:justify-end gap-5 sm:gap-6 lg:gap-8">
           <time
             ref={dateRef}
-            className="text-8xl font-extrabold text-white uppercase"
+            className="font-extrabold text-white uppercase leading-none"
             dateTime={new Date().toISOString().slice(0, 7)}
-            style={{ paddingBottom: "0.1em", paddingInline: "0.05em" }}
+            style={{
+              fontSize: "clamp(2rem, 12vw, 6rem)",
+              paddingBottom: "0.1em",
+              paddingInline: "0.05em",
+            }}
           >
             {formatMonthYear(new Date())}
           </time>
 
-          <nav className="flex flex-col gap-10" aria-label="Social links">
+          <nav
+            className="flex flex-col gap-4 sm:gap-6 lg:gap-10"
+            aria-label="Social links"
+          >
             {SOCIAL_LINKS.map((social, i) => {
               const Icon = social.icon;
               return (
@@ -204,7 +211,7 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
                   aria-label={`Visit ${social.label} profile`}
                   className="group flex items-center gap-2 text-white transition-colors duration-300"
                 >
-                  <Icon className="w-10 h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
+                  <Icon className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 shrink-0 transition-transform duration-300 group-hover:scale-110" />
                 </a>
               );
             })}

@@ -63,8 +63,20 @@ nav a .word,
   transform: translateY(100%);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
+  .preloader-counter {
+    left: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
   .preloader-counter {
     left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .preloader-counter {
+    left: 0.5rem;
   }
 }

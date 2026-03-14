@@ -35,16 +35,19 @@ const SOCIAL_LINKS = [
     icon: RiLinkedinBoxFill,
     href: "https://www.linkedin.com/in/suryax2",
     label: "LinkedIn",
+    hoverColor: "hover:text-blue-400",
   },
   {
     icon: RiGithubFill,
     href: "https://github.com/suryax2",
     label: "GitHub",
+    hoverColor: "hover:text-white",
   },
   {
     icon: RiInstagramLine,
     href: "https://www.instagram.com/surya.sekhar.sharma/",
     label: "Instagram",
+    hoverColor: "hover:text-pink-400",
   },
 ];
 
@@ -95,17 +98,15 @@ const Navbar = () => {
           type: "lines",
           linesClass: "line-wrapper",
         });
-
         const innerSplit = new SplitText(link, {
           type: "lines",
           linesClass: "line-inner",
         });
-
         splitInstancesRef.current.push(outerSplit, innerSplit);
         gsap.set(innerSplit.lines, { yPercent: 120, opacity: 0 });
       });
 
-      [...menuTags, ...footerText].forEach((element) => {
+      [...(menuTags || []), ...(footerText || [])].forEach((element) => {
         const split = new SplitText(element, {
           type: "lines",
           linesClass: "line-inner",
@@ -128,6 +129,7 @@ const Navbar = () => {
       });
 
       gsap.set(menuContentRef.current, { opacity: 0 });
+
       gsap.set(menuImageRef.current, {
         scale: 1.3,
         opacity: 0,
@@ -148,7 +150,7 @@ const Navbar = () => {
             duration: ANIMATION_CONFIG.contentFadeDuration,
             ease: "power2.out",
           },
-          "-=0.8",
+          "<",
         )
         .to(
           menuImageRef.current,
@@ -170,7 +172,7 @@ const Navbar = () => {
             stagger: ANIMATION_CONFIG.linkStagger,
             ease: ANIMATION_CONFIG.easeType,
           },
-          "-=0.9",
+          "<",
         )
         .to(
           menuTagsRef.current?.querySelectorAll(".line-inner"),
@@ -181,7 +183,7 @@ const Navbar = () => {
             stagger: ANIMATION_CONFIG.tagStagger,
             ease: ANIMATION_CONFIG.easeType,
           },
-          "-=1.2",
+          "-=1",
         )
         .to(
           menuFooterRef.current?.querySelectorAll(".line-inner"),
@@ -192,7 +194,7 @@ const Navbar = () => {
             stagger: ANIMATION_CONFIG.footerStagger,
             ease: ANIMATION_CONFIG.easeType,
           },
-          "-=1.1",
+          "<",
         );
     };
 
@@ -206,7 +208,6 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     if (!timelineRef.current) return;
-
     if (!isMenuOpen) {
       timelineRef.current.play();
       setIsMenuOpen(true);
@@ -221,17 +222,13 @@ const Navbar = () => {
   const handleLinkClick = (e) => {
     e.preventDefault();
     const href = e.currentTarget.getAttribute("href");
-
     if (timelineRef.current) {
       timelineRef.current.reverse();
       setIsMenuOpen(false);
       lenisRef?.current?.start();
     }
-
     setTimeout(() => {
-      if (href) {
-        lenisRef?.current?.scrollTo(href, { duration: 1.4, offset: 0 });
-      }
+      if (href) lenisRef?.current?.scrollTo(href, { duration: 1.4, offset: 0 });
     }, 300);
   };
 
@@ -259,24 +256,14 @@ const Navbar = () => {
           <span className="text-sm font-semibold tracking-tighter transition-opacity duration-300 p-1">
             {isMenuOpen ? "Close" : "Menu"}
           </span>
-
           <div className="relative w-10 h-10 flex items-center justify-center border-2 border-black bg-black rounded-full overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.87,0,0.13,1)]">
             <div
-              className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-                isMenuOpen
-                  ? "opacity-0 rotate-90 scale-75"
-                  : "opacity-100 rotate-0 scale-100"
-              }`}
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${isMenuOpen ? "opacity-0 rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"}`}
             >
               <RiMenuLine className="w-6 h-6 text-white" />
             </div>
-
             <div
-              className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-                isMenuOpen
-                  ? "opacity-100 rotate-0 scale-100"
-                  : "opacity-0 -rotate-90 scale-75"
-              }`}
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-75"}`}
             >
               <RiCloseLargeLine className="w-6 h-6 text-white" />
             </div>
@@ -291,7 +278,7 @@ const Navbar = () => {
         aria-hidden={!isMenuOpen}
       >
         <div ref={menuContentRef} className="relative w-full h-full flex">
-          <div className="w-2/5 h-full relative overflow-hidden bg-neutral-900">
+          <div className="hidden md:block md:w-2/5 h-full relative overflow-hidden bg-neutral-900 shrink-0">
             <div
               ref={menuImageRef}
               className="w-full h-full"
@@ -306,11 +293,39 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="flex-1 relative flex flex-col justify-center p-10 overflow-y-hidden">
-            <div className="flex gap-34 items-end">
+          <div className="flex-1 relative flex flex-col h-full overflow-y-auto p-6 sm:p-8 md:p-10">
+            <div className="md:hidden flex items-center gap-3 pt-16 pb-4 mb-2">
+              <div className="w-11 h-11 rounded-full overflow-hidden border border-neutral-700 shrink-0">
+                <img
+                  src="/me.jpg"
+                  alt="Surya Sekhar Sharma"
+                  className="w-full h-full object-cover object-right"
+                />
+              </div>
+              <div className="flex flex-col">
+                <p className="text-white text-sm font-semibold tracking-wide leading-tight">
+                  Surya Sekhar Sharma
+                </p>
+                <p className="text-neutral-500 text-[10px] tracking-[0.2em] uppercase mt-0.5">
+                  Creative Developer
+                </p>
+              </div>
+              <div className="ml-auto flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 rounded-full px-2.5 py-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="text-[9px] text-neutral-400 tracking-[0.15em] uppercase whitespace-nowrap">
+                  Open to work
+                </span>
+              </div>
+            </div>
+
+            <div className="md:hidden w-full h-px bg-neutral-800 mb-2" />
+
+            <div className="hidden md:block md:flex-1" />
+
+            <div className="flex flex-col md:flex-row md:gap-34 md:items-end flex-1 md:flex-none justify-center md:justify-start gap-0">
               <nav
                 ref={menuLinksRef}
-                className="flex flex-col gap-3"
+                className="flex flex-col md:gap-3"
                 aria-label="Main navigation"
               >
                 {NAVIGATION_ITEMS.map((item, index) => (
@@ -318,10 +333,18 @@ const Navbar = () => {
                     <a
                       href={item.href}
                       onClick={handleLinkClick}
-                      className="block text-7xl font-extralight uppercase leading-[1.1] text-white hover:text-neutral-400 transition-colors duration-300 will-change-transform"
+                      className="
+                        group flex items-center justify-center lg:justify-between
+                        font-light uppercase leading-[1.2] md:leading-[1.1]
+                        text-neutral-400 hover:text-white
+                        transition-colors duration-300 will-change-transform
+                        py-2.5 md:py-0
+                        border-b border-neutral-800/50 md:border-none
+                        text-[clamp(2rem,10vw,3rem)] md:text-7xl
+                      "
                       style={{ transitionDelay: `${index * 30}ms` }}
                     >
-                      {item.label}
+                      <span>{item.label}</span>
                     </a>
                   </div>
                 ))}
@@ -329,7 +352,7 @@ const Navbar = () => {
 
               <aside
                 ref={menuTagsRef}
-                className="flex flex-col gap-4 pt-3"
+                className="hidden md:flex flex-col gap-4 pt-3"
                 aria-label="Profile tags"
               >
                 {TAGS.map((tag) => (
@@ -344,61 +367,101 @@ const Navbar = () => {
               </aside>
             </div>
 
+            <div className="hidden md:block md:flex-1" />
+
             <footer
               ref={menuFooterRef}
-              className="flex gap-16 pt-6 mt-auto border-t border-neutral-800"
+              className="mt-4 md:mt-0 pt-4 md:pt-6 border-t border-neutral-800"
             >
-              <div className="flex flex-col gap-2">
-                <div className="overflow-hidden">
-                  <p className="text-sm font-medium text-neutral-500 uppercase tracking-wide">
-                    Location
-                  </p>
+              <div className="hidden md:flex gap-16">
+                <div className="flex flex-col gap-2">
+                  <div className="overflow-hidden">
+                    <p className="text-sm font-medium text-neutral-500 uppercase tracking-wide">
+                      Location
+                    </p>
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-base text-neutral-400">
+                      {CONTACT_INFO.location}
+                    </p>
+                  </div>
                 </div>
-                <div className="overflow-hidden">
-                  <p className="text-base text-neutral-400">
-                    {CONTACT_INFO.location}
-                  </p>
+
+                <div className="flex flex-col gap-2">
+                  <div className="overflow-hidden">
+                    <p className="text-sm font-medium text-neutral-500 uppercase tracking-wide">
+                      Contact
+                    </p>
+                  </div>
+                  <div className="overflow-hidden">
+                    <a
+                      href={`tel:${CONTACT_INFO.phone}`}
+                      className="text-base text-neutral-400 hover:text-white transition-colors duration-300"
+                    >
+                      {CONTACT_INFO.phone}
+                    </a>
+                  </div>
+                  <div className="overflow-hidden">
+                    <a
+                      href={`mailto:${CONTACT_INFO.email}`}
+                      className="text-base text-neutral-400 hover:text-white transition-colors duration-300"
+                    >
+                      {CONTACT_INFO.email}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2 ml-auto">
+                  <div className="flex gap-4 items-center">
+                    {SOCIAL_LINKS.map((social) => {
+                      const Icon = social.icon;
+                      return (
+                        <a
+                          key={social.label}
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`text-neutral-400 ${social.hoverColor} transition-all duration-300 hover:scale-110`}
+                          aria-label={social.label}
+                        >
+                          <Icon className="w-8 h-8" />
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <div className="overflow-hidden">
-                  <p className="text-sm font-medium text-neutral-500 uppercase tracking-wide">
-                    Contact
-                  </p>
+              <div className="md:hidden flex items-center justify-between gap-4">
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <div className="overflow-hidden">
+                    <p className="text-[10px] text-neutral-600 uppercase tracking-[0.2em] truncate">
+                      {CONTACT_INFO.location}
+                    </p>
+                  </div>
+                  <div className="overflow-hidden">
+                    <a
+                      href={`mailto:${CONTACT_INFO.email}`}
+                      className="text-xs text-neutral-400 hover:text-white transition-colors duration-300 truncate block"
+                    >
+                      {CONTACT_INFO.email}
+                    </a>
+                  </div>
                 </div>
-                <div className="overflow-hidden">
-                  <a
-                    href={`tel:${CONTACT_INFO.phone}`}
-                    className="text-base text-neutral-400 hover:text-white transition-colors duration-300"
-                  >
-                    {CONTACT_INFO.phone}
-                  </a>
-                </div>
-                <div className="overflow-hidden">
-                  <a
-                    href={`mailto:${CONTACT_INFO.email}`}
-                    className="text-base text-neutral-400 hover:text-white transition-colors duration-300"
-                  >
-                    {CONTACT_INFO.email}
-                  </a>
-                </div>
-              </div>
 
-              <div className="flex flex-col gap-2 ml-auto">
-                <div className="flex gap-4 items-center">
+                <div className="flex items-center gap-3 shrink-0">
                   {SOCIAL_LINKS.map((social) => {
-                    const IconComponent = social.icon;
+                    const Icon = social.icon;
                     return (
                       <a
                         key={social.label}
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`text-neutral-400 ${social.label === "LinkedIn" ? "hover:text-blue-400" : social.label === "Instagram" ? "hover:text-pink-400" : "hover:text-white"} transition-all duration-300 hover:scale-110`}
+                        className={`text-neutral-500 ${social.hoverColor} transition-all duration-300 active:scale-95`}
                         aria-label={social.label}
                       >
-                        <IconComponent className="w-8 h-8" />
+                        <Icon className="w-6 h-6" />
                       </a>
                     );
                   })}
@@ -414,14 +477,9 @@ const Navbar = () => {
           overflow: hidden;
           display: block;
         }
-
         .line-inner {
           display: block;
           will-change: transform, opacity;
-        }
-
-        html {
-          scroll-behavior: auto;
         }
       `}</style>
     </>

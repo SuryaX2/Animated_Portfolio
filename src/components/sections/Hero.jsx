@@ -280,7 +280,7 @@ const Hero = () => {
   return (
     <div
       id="hero"
-      className="relative overflow-x-hidden bg-white"
+      className="relative w-full overflow-hidden bg-white flex flex-col items-center justify-center"
       ref={componentRef}
     >
       <div
@@ -293,7 +293,10 @@ const Hero = () => {
         </h1>
       </div>
 
-      <div ref={heroRef} className="min-h-screen relative overflow-hidden">
+      <div
+        ref={heroRef}
+        className="min-h-screen w-full relative overflow-hidden"
+      >
         <div
           ref={heroBgRef}
           className="hero-bg"
@@ -315,12 +318,11 @@ const Hero = () => {
           style={{ willChange: "transform", opacity: 0 }}
         />
 
-        <div className="p-16 relative z-10 flex flex-col gap-4 pointer-events-none select-none">
+        <div className="p-14 sm:p-8 md:p-10 lg:p-16 relative z-10 flex flex-col gap-2 sm:gap-3 md:gap-4 pointer-events-none select-none">
           <h1
             ref={headingRef}
-            className="hero-heading text-9xl font-extrabold uppercase tracking-wider text-white"
+            className="hero-heading text-4xl lg:text-9xl font-extrabold uppercase tracking-wider text-white text-center lg:text-left"
             style={{
-              fontSize: "clamp(5rem, 9vw, 10rem)",
               willChange: "transform",
             }}
           >
@@ -328,9 +330,8 @@ const Hero = () => {
           </h1>
           <h1
             ref={subheadingRef}
-            className="hero-heading text-9xl font-extrabold uppercase tracking-wider text-white text-right"
+            className="hero-heading text-4xl lg:text-9xl font-extrabold uppercase tracking-wider text-white text-center lg:text-right"
             style={{
-              fontSize: "clamp(5rem, 9vw, 10rem)",
               willChange: "transform",
             }}
           >

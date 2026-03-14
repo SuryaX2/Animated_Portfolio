@@ -6,10 +6,18 @@ const CustomCursor = () => {
   const cursorRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
 
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
   useEffect(() => {
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    setIsTouchDevice(coarse);
+  }, []);
+
+  useEffect(() => {
+    if (isTouchDevice) return;
     const timer = setTimeout(() => setIsReady(true), 100);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isTouchDevice]);
 
   useGSAP(
     () => {
@@ -35,7 +43,7 @@ const CustomCursor = () => {
     { dependencies: [isReady], scope: cursorRef },
   );
 
-  if (!isReady) return null;
+  if (isTouchDevice || !isReady) return null;
 
   return (
     <div
