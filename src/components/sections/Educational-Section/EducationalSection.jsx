@@ -1,9 +1,9 @@
 import gsap from "gsap";
+import { useRef } from "react";
+import "./EducationalSection.css";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useRef } from "react";
-import "./EducationalSection.css";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 

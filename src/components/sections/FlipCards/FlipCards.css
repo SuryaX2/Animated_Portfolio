@@ -84,11 +84,9 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-        ellipse at 50% 0%,
-        rgba(255, 255, 255, 0.18) 0%,
-        transparent 65%
-    );
+    background: radial-gradient(ellipse at 50% 0%,
+            rgba(255, 255, 255, 0.18) 0%,
+            transparent 65%);
     pointer-events: none;
 }
 
@@ -96,12 +94,10 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        160deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        transparent 40%,
-        rgba(0, 0, 0, 0.3) 100%
-    );
+    background: linear-gradient(160deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 40%,
+            rgba(0, 0, 0, 0.3) 100%);
     pointer-events: none;
 }
 
@@ -162,11 +158,9 @@
 }
 
 #card-2 .card-back::before {
-    background: radial-gradient(
-        ellipse at 50% 0%,
-        rgba(255, 180, 160, 0.25) 0%,
-        transparent 65%
-    );
+    background: radial-gradient(ellipse at 50% 0%,
+            rgba(255, 180, 160, 0.25) 0%,
+            transparent 65%);
 }
 
 #card-2 .card-back-rule {
@@ -186,6 +180,7 @@
 #card-3 .card-back-rule {
     background-color: rgba(255, 255, 255, 0.25);
 }
+
 
 @media (max-width: 1000px) {
     .FlipCards {
@@ -236,5 +231,52 @@
     #card-2 .card-back,
     #card-3 .card-back {
         backface-visibility: visible;
+    }
+}
+
+@media (max-width: 640px) {
+    .FlipCards {
+        padding: 3rem 1.25rem;
+        gap: 2rem;
+    }
+
+    .sticky-header h1 {
+        font-size: 10vw;
+        text-align: center;
+    }
+
+    .card-container {
+        gap: 1.25rem;
+    }
+
+    .card {
+        max-width: 100%;
+    }
+
+    .card-back {
+        padding: 1.75rem;
+    }
+
+    .card-back-number {
+        top: 1.5rem;
+        left: 1.75rem;
+    }
+
+    .card-back-label {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .FlipCards {
+        padding: 2.5rem 1rem;
+    }
+
+    .sticky-header h1 {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+    }
+
+    .card-back {
+        padding: 1.25rem;
     }
 }
