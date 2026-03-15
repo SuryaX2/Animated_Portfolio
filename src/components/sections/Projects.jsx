@@ -33,20 +33,11 @@ const ProjectCard = ({ project, index }) => {
   const { title, tag, description, deployUrl, githubUrl, techIcons } = project;
 
   return (
-    /*
-     * Desktop: m-8 outer margin (original). Mobile: tighter horizontal margin
-     * so the card never overflows the viewport.
-     */
     <div className="flex flex-col gap-4 sm:gap-5 w-full mx-4 sm:mx-6 md:m-8 my-0">
-      {/* ── Index + tag row ── */}
       <div className="flex items-end gap-3">
         <span
           className="font-black leading-none text-white select-none"
           style={{
-            /*
-             * Desktop: clamp(72px, 10vw, 130px) — unchanged.
-             * Mobile floor dropped from 72 → 40px so it fits without overflow.
-             */
             fontSize: "clamp(40px, 10vw, 130px)",
           }}
         >
@@ -57,37 +48,21 @@ const ProjectCard = ({ project, index }) => {
         </span>
       </div>
 
-      {/* ── Project title ── */}
       <h3
         className="font-black leading-none tracking-tight text-white"
         style={{
-          /*
-           * Desktop: clamp(32px, 4.5vw, 62px) — unchanged.
-           * Mobile floor stays at 32px; already fine on narrow screens.
-           */
           fontSize: "clamp(26px, 4.5vw, 62px)",
         }}
       >
         {title}
       </h3>
 
-      {/* ── Divider ── */}
-      {/* was w-18 (Tailwind JIT arbitrary); using explicit 72px is more reliable */}
-      <div className="w-[72px] h-px bg-white" />
+      <div className="w-18 h-px bg-white" />
 
-      {/* ── Description ── */}
-      <p
-        className="
-          text-[13.5px] leading-[1.8] text-white/50 font-light
-          max-w-full          /* mobile: full width */
-          sm:max-w-[80%]      /* tablet: 80% */
-          md:max-w-[66%]      /* desktop: original ~2/3 */
-        "
-      >
+      <p className="text-[13.5px] leading-[1.8] text-white/50 font-light max-w-full sm:max-w-[80%] md:max-w-[66%]">
         {description}
       </p>
 
-      {/* ── Tech stack ── */}
       <div>
         <p className="text-sm tracking-[0.3em] uppercase text-white mb-2.5 font-medium">
           Tech Stack
@@ -95,23 +70,18 @@ const ProjectCard = ({ project, index }) => {
         <img
           src={`https://skillicons.dev/icons?i=${techIcons}&perline=9&theme=dark`}
           alt={`Tech used in ${title}`}
-          className="h-8 sm:h-10" /* slightly smaller on mobile */
+          className="h-8 sm:h-10"
           loading="lazy"
           decoding="async"
         />
       </div>
 
-      {/* ── CTA buttons ── */}
       <div className="flex items-center gap-2.5 flex-wrap pt-1">
         {deployUrl && (
           <a
             href={deployUrl}
             target="_blank"
             rel="noopener noreferrer"
-            /*
-             * Desktop: px-8 py-3 (original). Mobile: px-5 py-2.5 so buttons
-             * don't overflow or crowd on narrow screens. text-sm on mobile.
-             */
             className="
               inline-flex items-center gap-1.5 rounded-full font-semibold tracking-wide
               bg-[#c9ff00] text-black transition-[opacity,transform] duration-200
