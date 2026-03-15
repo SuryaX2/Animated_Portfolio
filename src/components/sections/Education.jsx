@@ -7,8 +7,8 @@ const Education = () => {
         <h1
           className="
             uppercase text-center font-semibold leading-none text-black
-            text-5xl w-full px-6
-            sm:w-full sm:px-8
+            text-4xl w-full px-6
+            sm:text-5xl sm:w-full sm:px-8
             md:text-7xl md:w-4/5 md:px-0
             lg:text-9xl lg:w-2/3 lg:px-0
           "
@@ -18,13 +18,13 @@ const Education = () => {
       </section>
 
       <EducationalSection />
-      
+
       <section className="outro relative w-screen overflow-hidden">
         <h1
           className="
             uppercase text-center font-semibold leading-none text-black
-            text-5xl w-full px-6
-            sm:w-full sm:px-8
+            text-4xl w-full px-6
+            sm:text-5xl sm:w-full sm:px-8
             md:text-7xl md:w-4/5 md:px-0
             lg:text-9xl lg:w-2/3 lg:px-0
           "
