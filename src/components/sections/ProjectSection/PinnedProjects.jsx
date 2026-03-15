@@ -140,7 +140,7 @@ const PinnedProjects = ({
         </div>
 
         <div
-          className="pinned-right flex-1 h-screen w-full relative max-md:h-auto"
+          className="pinned-right flex-1 h-screen w-full relative max-md:h-auto hidden md:block"
           aria-hidden="true"
         >
           {rightContent.map((node, i) => (
