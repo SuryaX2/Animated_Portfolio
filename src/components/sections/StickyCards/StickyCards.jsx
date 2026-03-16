@@ -93,11 +93,14 @@ const StickyCards = () => {
       {cards.map((card, index) => (
         <div className="sticky-card rounded-t-4xl" key={index}>
           <div className="sticky-card-index">
-            <h1 className="text-9xl font-medium">({card.index})</h1>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-medium">
+              ({card.index})
+            </h1>
           </div>
+
           <div className="sticky-card-content">
             <div className="sticky-card-content-wrapper">
-              <h1 className="sticky-card-header text-4xl font-bold tracking-wider uppercase">
+              <h1 className="sticky-card-header text-2xl md:text-4xl font-bold tracking-wider uppercase">
                 {card.title}
               </h1>
 
@@ -111,7 +114,8 @@ const StickyCards = () => {
 
               <div className="sticky-card-copy">
                 <div className="sticky-card-copy-title">
-                  <p className="text-2xl">({card.techLabel})</p>
+                  <p className="text-base md:text-2xl">({card.techLabel})</p>
+
                   <div
                     style={{
                       display: "flex",
@@ -134,8 +138,7 @@ const StickyCards = () => {
                                 key={icon}
                                 src={`https://skillicons.dev/icons?i=${icon}`}
                                 alt={icon}
-                                width={40}
-                                height={40}
+                                className="w-8 h-8 md:w-10 md:h-10"
                                 title={icon}
                               />
                             ))}
@@ -144,6 +147,7 @@ const StickyCards = () => {
                     )}
                   </div>
                 </div>
+
                 <div className="sticky-card-copy-description font-semibold">
                   <p>{card.description}</p>
                 </div>
