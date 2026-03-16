@@ -71,8 +71,15 @@
 }
 
 @keyframes fr-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.7); }
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.7);
+  }
 }
 
 .fr-cta-heading {
@@ -368,7 +375,7 @@ a.fr-contact-link:hover {
   font-size: 0.68rem;
   font-weight: 400;
   letter-spacing: 0.06em;
-  color: #aaa;
+  color: #1f1f1f;
 }
 
 .fr-copy {
