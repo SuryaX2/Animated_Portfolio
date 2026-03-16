@@ -7,9 +7,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   RiLinkedinBoxFill,
   RiGithubFill,
-  RiInstagramLine,
   RiArrowUpLine,
   RiArrowRightUpLine,
+  RiDownloadFill,
 } from "@remixicon/react";
 import { useLenisContext } from "../../../context/LenisContext";
 
@@ -36,12 +36,6 @@ const SOCIAL_LINKS = [
     href: "https://github.com/suryax2",
     label: "GitHub",
     handle: "SuryaX2",
-  },
-  {
-    icon: RiInstagramLine,
-    href: "https://www.instagram.com/surya.sekhar.sharma/",
-    label: "Instagram",
-    handle: "surya.sekhar.sharma",
   },
 ];
 
@@ -289,6 +283,22 @@ const FooterReveal = () => {
                 </a>
               );
             })}
+            <a
+              href="/Resume/Surya_CV.pdf"
+              download
+              aria-label="Download Resume"
+              className="fr-social-row"
+            >
+              <span className="fr-social-left">
+                <RiDownloadFill className="fr-social-icon" aria-hidden="true" />
+                <span className="fr-social-label">Resume</span>
+              </span>
+              <span className="fr-social-handle">Download CV</span>
+              <RiArrowRightUpLine
+                className="fr-social-arrow"
+                aria-hidden="true"
+              />
+            </a>
           </div>
 
           <div className="fr-col fr-col--about">
@@ -314,11 +324,13 @@ const FooterReveal = () => {
             </div>
             <div className="fr-about-line fr-contact-details">
               <a
-                href="tel:+919830846280"
+                href="https://www.linkedin.com/in/suryax2"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="fr-contact-link"
-                itemProp="telephone"
+                itemProp="sameAs"
               >
-                +91 98308 46280
+                Connect on LinkedIn
               </a>
               <address
                 className="fr-contact-link"

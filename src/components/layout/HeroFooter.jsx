@@ -2,7 +2,7 @@ import {
   RiArrowRightDownLine,
   RiLinkedinBoxFill,
   RiGithubFill,
-  RiInstagramLine,
+  RiDownloadFill,
 } from "@remixicon/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
@@ -21,11 +21,6 @@ const SOCIAL_LINKS = [
     icon: RiGithubFill,
     href: "https://github.com/suryax2",
     label: "GitHub",
-  },
-  {
-    icon: RiInstagramLine,
-    href: "https://www.instagram.com/surya.sekhar.sharma/",
-    label: "Instagram",
   },
 ];
 
@@ -215,6 +210,15 @@ const HeroFooter = forwardRef(function HeroFooter(_, ref) {
                 </a>
               );
             })}
+            <a
+              ref={(el) => (socialRefs.current[SOCIAL_LINKS.length] = el)}
+              href="/Resume/Surya_CV.pdf"
+              download
+              aria-label="Download resume"
+              className="group flex items-center gap-2 text-white transition-colors duration-300"
+            >
+              <RiDownloadFill className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:translate-y-0.5" />
+            </a>
           </nav>
         </div>
       </div>

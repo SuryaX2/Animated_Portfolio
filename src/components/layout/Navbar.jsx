@@ -3,9 +3,9 @@ import {
   RiBnbLine,
   RiCloseLargeLine,
   RiGithubFill,
-  RiInstagramLine,
   RiLinkedinBoxFill,
   RiMenuLine,
+  RiDownloadFill,
 } from "@remixicon/react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -43,17 +43,10 @@ const SOCIAL_LINKS = [
     label: "GitHub",
     hoverColor: "hover:text-white",
   },
-  {
-    icon: RiInstagramLine,
-    href: "https://www.instagram.com/surya.sekhar.sharma/",
-    label: "Instagram",
-    hoverColor: "hover:text-pink-400",
-  },
 ];
 
 const CONTACT_INFO = {
   location: "Kolkata, India",
-  phone: "+91 9830846280",
   email: "sekharsurya111@gmail.com",
 };
 
@@ -234,7 +227,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full px-8 py-1 flex items-center justify-between pointer-events-auto text-white z-[100] mix-blend-difference">
+      <nav className="fixed top-0 left-0 w-full px-8 py-1 flex items-center justify-between pointer-events-auto text-white z-100 mix-blend-difference">
         <a
           href="#hero"
           className="w-8 h-8 transition-transform duration-300 hover:scale-110"
@@ -273,7 +266,7 @@ const Navbar = () => {
 
       <div
         ref={menuOverlayRef}
-        className="fixed top-0 left-0 w-screen h-screen bg-neutral-950 z-[90] overflow-hidden"
+        className="fixed top-0 left-0 w-screen h-screen bg-neutral-950 z-90 overflow-hidden"
         style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
         aria-hidden={!isMenuOpen}
       >
@@ -395,14 +388,6 @@ const Navbar = () => {
                   </div>
                   <div className="overflow-hidden">
                     <a
-                      href={`tel:${CONTACT_INFO.phone}`}
-                      className="text-base text-neutral-400 hover:text-white transition-colors duration-300"
-                    >
-                      {CONTACT_INFO.phone}
-                    </a>
-                  </div>
-                  <div className="overflow-hidden">
-                    <a
                       href={`mailto:${CONTACT_INFO.email}`}
                       className="text-base text-neutral-400 hover:text-white transition-colors duration-300"
                     >
@@ -428,6 +413,14 @@ const Navbar = () => {
                         </a>
                       );
                     })}
+                    <a
+                      href="/Resume/Surya_CV.pdf"
+                      download
+                      aria-label="Download Resume"
+                      className="text-neutral-400 hover:text-white transition-all duration-300 hover:scale-110"
+                    >
+                      <RiDownloadFill className="w-8 h-8" />
+                    </a>
                   </div>
                 </div>
               </div>
@@ -465,6 +458,14 @@ const Navbar = () => {
                       </a>
                     );
                   })}
+                  <a
+                    href="/Resume/Surya_CV.pdf"
+                    download
+                    aria-label="Download Resume"
+                    className="text-neutral-500 hover:text-white transition-all duration-300 active:scale-95"
+                  >
+                    <RiDownloadFill className="w-6 h-6" />
+                  </a>
                 </div>
               </div>
             </footer>
