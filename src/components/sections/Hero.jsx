@@ -14,6 +14,50 @@ const FRAME_COUNT = 300;
 const SCROLL_DISTANCE = "300%";
 const FRAME_PATH = (n) => `/Frames/frame_${String(n).padStart(4, "0")}.jpeg`;
 
+const BLOCKED_KEYS = new Set([
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+  "PageUp",
+  "PageDown",
+  "Home",
+  "End",
+  " ",
+]);
+
+const lockScroll = () => {
+  const scrollY = window.scrollY;
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.width = "100%";
+
+  const onWheel = (e) => e.preventDefault();
+  window.addEventListener("wheel", onWheel, { passive: false });
+
+  const onTouchMove = (e) => e.preventDefault();
+  window.addEventListener("touchmove", onTouchMove, { passive: false });
+
+  const onKeyDown = (e) => {
+    if (BLOCKED_KEYS.has(e.key)) e.preventDefault();
+  };
+  window.addEventListener("keydown", onKeyDown);
+
+  return () => {
+    const top = Math.abs(parseInt(document.body.style.top || "0", 10));
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.width = "";
+    window.scrollTo(0, top);
+
+    window.removeEventListener("wheel", onWheel);
+    window.removeEventListener("touchmove", onTouchMove);
+    window.removeEventListener("keydown", onKeyDown);
+  };
+};
+
 const preloadFrames = async () => {
   const images = new Array(FRAME_COUNT);
   const promises = Array.from({ length: FRAME_COUNT }, (_, i) => {
@@ -66,20 +110,21 @@ const Hero = () => {
   const splitInstancesRef = useRef([]);
   const scrollTriggerRef = useRef(null);
   const pendingRAFRef = useRef(null);
-  const unlockScrollRef = useRef(null);
+
+  const domUnlockRef = useRef(null);
 
   useEffect(() => {
+    domUnlockRef.current = lockScroll();
+
     lenisRef?.current?.stop();
+
     preloadFrames().then((images) => {
       framesRef.current = images;
     });
-    return () => lenisRef?.current?.start();
-  }, [lenisRef]);
 
-  useEffect(() => {
-    unlockScrollRef.current = () => {
+    return () => {
+      domUnlockRef.current?.();
       lenisRef?.current?.start();
-      ScrollTrigger.refresh();
     };
   }, [lenisRef]);
 
@@ -159,6 +204,15 @@ const Hero = () => {
           ScrollTrigger.refresh();
           pendingRAFRef.current = null;
         });
+      };
+
+      const unlockAfterAnimation = () => {
+        domUnlockRef.current?.();
+        domUnlockRef.current = null;
+
+        lenisRef?.current?.start();
+
+        ScrollTrigger.refresh();
       };
 
       const tl = gsap.timeline();
@@ -250,7 +304,7 @@ const Hero = () => {
 
       tl.call(
         () => {
-          unlockScrollRef.current?.();
+          unlockAfterAnimation();
           drawFrame(0);
           gsap.to(canvasRef.current, { opacity: 1, duration: 0.3 });
           setupScrollSequence();
@@ -270,6 +324,8 @@ const Hero = () => {
           cancelAnimationFrame(pendingRAFRef.current);
           pendingRAFRef.current = null;
         }
+        domUnlockRef.current?.();
+        domUnlockRef.current = null;
         lenisRef?.current?.start();
         ScrollTrigger.refresh();
       };

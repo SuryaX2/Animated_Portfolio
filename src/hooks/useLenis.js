@@ -22,6 +22,8 @@ export const useLenis = () => {
 
     lenisRef.current = lenis;
 
+    lenis.stop();
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const ticker = gsap.ticker.add((time) => {
