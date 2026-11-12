@@ -35,7 +35,7 @@ const EDUCATION_DATA = [
     name: "Narula Institute of Technology",
     degree: "Bachelor of Technology",
     qualifier: "B.Tech — Information Technology",
-    period: { from: "2022", to: "Present" },
+    period: { from: "2022", to: "2026" },
     level: "03",
     image: "/NiT.jpg",
     alt: "Narula Institute of Technology campus",
